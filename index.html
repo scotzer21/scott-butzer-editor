@@ -288,6 +288,9 @@ async function savedOrder(){
 const VIEW = 896; // seconds of reel visible at once; keeps clip sizes as they were with nine films
 const greys=["var(--c1)","var(--c2)","var(--c3)","var(--c4)","var(--c5)","var(--c6)"];
 const total = work.reduce((s,w)=>s+w.len,0);
+// Timeline clips are drawn at most MAXCLIP seconds wide; timecode still runs on each piece's real length
+const MAXCLIP = 180, vlen = w => Math.min(w.len, MAXCLIP);
+const vtotal = work.reduce((s,w)=>s+vlen(w),0);
 const tc = (sec,f=0)=>{const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=Math.floor(sec%60);return [h,m,s,f].map(n=>String(n).padStart(2,"0")).join(":")};
 const dur = x => {const s=Math.round(x);return s>=60 ? `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}` : `:${s}`};
 const esc = t => String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -297,19 +300,19 @@ let start = 0;
 work.forEach((w,i)=>{
   w.in = start; start += w.len;
   const v = document.createElement("button");
-  v.type="button"; v.className="clip"; v.style.setProperty("--d",w.len); v.style.setProperty("--clr",greys[i%6]);
+  v.type="button"; v.className="clip"; v.style.setProperty("--d",vlen(w)); v.style.setProperty("--clr",greys[i%6]);
   v.style.setProperty("--img",`url("${still(w)}")`);
   v.innerHTML=`<span class="face"><b>${esc(w.client||w.t)}</b><i>${dur(w.len)}</i></span>`; v.dataset.i=i;
   v.setAttribute("aria-label",`Play ${name(w)}, ${dur(w.len)}`);
   v.addEventListener("click",()=>openPlayer(i));
   document.getElementById("v1").append(v);
   const a = document.createElement("div");
-  a.className="clip"; a.style.setProperty("--d",w.len); a.style.setProperty("--clr",greys[i%6]);
+  a.className="clip"; a.style.setProperty("--d",vlen(w)); a.style.setProperty("--clr",greys[i%6]);
   document.getElementById("a1").append(a);
 });
 document.getElementById("reel-label").textContent=`Selects_Reel_2026 · ${work.length} films · scroll →`;
 document.getElementById("outpoint").textContent="Out point "+tc(Math.floor(total));
-document.getElementById("tl-body").style.width=(total/VIEW*100)+"%";
+document.getElementById("tl-body").style.width=(vtotal/VIEW*100)+"%";
 const ruler = document.getElementById("ruler");
 const step = innerWidth<560 ? 240 : 120;
 for(let s=0;s<=total;s+=step){const sp=document.createElement("span");sp.dataset.t=s;sp.style.left=(s/total*100)+"%";sp.textContent=`${Math.floor(s/60)}:00`;ruler.append(sp)}
@@ -330,7 +333,9 @@ function xToTime(x){
       const f=Math.max(0,Math.min(1,(x-c.offsetLeft)/c.offsetWidth)); return w.in + w.len*f;}}
   return 0;
 }
-function placeRuler(){ ruler.querySelectorAll("span").forEach(sp=>{ sp.style.left=timeToX(+sp.dataset.t)+"px"; }); }
+function placeRuler(){                     // ticks sit at their true times; ones that would crowd (inside long, capped clips) hide
+  let last=-1e9; ruler.querySelectorAll("span").forEach(sp=>{ const x=timeToX(+sp.dataset.t); sp.style.left=x+"px"; const show=x-last>=44; sp.style.visibility=show?"":"hidden"; if(show) last=x; });
+}
 function place(sec){
   ph.style.left=(v1.offsetLeft + v1.parentElement.offsetLeft + timeToX(sec))+"px";
   tcEl.textContent=tc(Math.floor(sec),Math.floor((sec%1)*FPS));
