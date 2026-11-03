@@ -281,6 +281,7 @@ async function savedOrder(){
   const raw=await savedOrder();
   const saved=Array.isArray(raw) ? raw : (raw&&Array.isArray(raw.order) ? raw.order : null);
   window.__removed=(raw&&Array.isArray(raw.removed)) ? raw.removed : [];
+  window.__catOrder=(raw&&raw.catOrder&&typeof raw.catOrder==="object") ? raw.catOrder : {};   // optional per-category order for the filtered views
   for(let i=work.length-1;i>=0;i--) if(window.__removed.includes(work[i].k)) work.splice(i,1);   // deleted spots never render
   if(saved){
     const rank=new Map(saved.map((k,i)=>[k,i]));
@@ -440,7 +441,9 @@ const empty=document.createElement("p"); empty.className="grid-empty"; empty.hid
 CATS.forEach(([cat,label])=>{
   const b=document.createElement("button"); b.type="button"; b.textContent=label; b.setAttribute("aria-pressed",cat==="All");
   b.onclick=()=>{filters.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
-    let shown=0; grid.querySelectorAll(".card").forEach(c=>{const on=cat==="All"||c.dataset.cat===cat; c.hidden=!on; shown+=on;});
+    const co=(window.__catOrder||{})[cat]||[];
+    let shown=0; grid.querySelectorAll(".card").forEach(c=>{const on=cat==="All"||c.dataset.cat===cat; c.hidden=!on; shown+=on;
+      const r=co.indexOf(c.dataset.k); c.style.order = (cat!=="All" && r>=0) ? r : (cat!=="All" && co.length ? co.length : "");});
     empty.hidden=shown>0; empty.textContent=`${label} coming soon.`;};
   filters.append(b);
 });
