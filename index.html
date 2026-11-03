@@ -237,7 +237,7 @@ const work = [
   {k:"saintarcher", client:"Saint Archer",   t:"Saint Archer Gold",          len:75.1,  fps:"23.976",cat:"Commercial"},
   {k:"infiniti",    client:"INFINITI",       t:"QX50: Liam's Seat",          len:45.0,  fps:"23.976",cat:"Commercial"},
   {k:"gatorade",    client:"Gatorade",       t:"Every Day Is Your Day",      len:151.9, fps:"23.976",cat:"Commercial"},
-  {k:"prius",       client:"Toyota",         t:"Prius: Black Sheep",         len:30.0,  fps:"23.976",cat:"Commercial"},
+  {k:"prius",       client:"Toyota",         t:"Prius: Black Sheep",         len:30.0,  fps:"23.976",cat:"Commercial", img:"prius-2"},
   {k:"rimowa",      client:"RIMOWA",         t:"Anthem",                     len:60.0,  fps:"25",    cat:"Commercial"},
   {k:"lexus",       client:"Lexus",          t:"Lexus IS",                   len:30.0,  fps:"23.976",cat:"Commercial"},
   {k:"ytmusic",     client:"YouTube Music",  t:"YouTube Music",              len:124.4, fps:"23.976",cat:"Commercial", note:"Director's cut"},
@@ -285,7 +285,7 @@ work.forEach((w,i)=>{
   w.in = start; start += w.len;
   const v = document.createElement("button");
   v.type="button"; v.className="clip"; v.style.setProperty("--d",w.len); v.style.setProperty("--clr",greys[i%6]);
-  v.style.setProperty("--img",`url("media/${w.k}.jpg")`);
+  v.style.setProperty("--img",`url("media/${w.img||w.k}.jpg")`);
   v.innerHTML=`<span class="face"><b>${esc(w.client||w.t)}</b><i>${dur(w.len)}</i></span>`; v.dataset.i=i;
   v.setAttribute("aria-label",`Play ${name(w)}, ${dur(w.len)}`);
   v.addEventListener("click",()=>openPlayer(i));
@@ -406,7 +406,7 @@ const grid=document.getElementById("grid"), filters=document.getElementById("fil
 work.forEach((w,i)=>{
   const c=document.createElement("button");
   c.type="button"; c.className="card"; c.id="p"+i; c.dataset.cat=w.cat; c.dataset.k=w.k;
-  c.innerHTML=`<div class="still"><img class="frame" src="media/${w.k}.jpg" alt="" loading="lazy">
+  c.innerHTML=`<div class="still"><img class="frame" src="media/${w.img||w.k}.jpg" alt="" loading="lazy">
       <span class="ar">${w.fps} fps</span>
       <span class="burn">TC ${tc(Math.floor(w.in))} → ${tc(Math.floor(w.in+w.len))}</span>
       <div class="play"><span>▶ PLAY ${dur(w.len)}</span></div></div>
