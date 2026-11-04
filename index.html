@@ -121,6 +121,13 @@ h2{font-family:var(--display);font-stretch:62%;font-weight:800;text-transform:up
 .player{position:fixed;inset:0;z-index:1000;background:rgba(10,10,10,.94);display:grid;place-items:center;
   padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .player[hidden]{display:none}
+/* Phones turned sideways: the playing film fills the screen edge to edge (title and buttons step aside; turn back upright to see them) */
+@media (hover:none) and (orientation:landscape) and (max-height:520px){
+  .player{padding:0;background:#000;overflow:hidden}
+  .player-in{width:min(100vw,calc(100vh*16/9));gap:0}
+  .player-bar{display:none}
+}
+@supports (height:100dvh){@media (hover:none) and (orientation:landscape) and (max-height:520px){.player-in{width:min(100vw,calc(100dvh*16/9))}}}
 .player{overflow-y:auto;overscroll-behavior:contain}
 /* the video is sized to the screen's height as well as its width, so the title bar and Prev / Next / Close always fit below it */
 .player-in{width:min(1200px,100%,calc((100vh - 140px)*16/9));display:grid;gap:12px}
