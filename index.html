@@ -480,8 +480,8 @@ const endCard=document.getElementById("pl-end");
 addEventListener("message",e=>{
   if(e.origin!=="https://player.vimeo.com" || e.source!==ifr.contentWindow) return;
   let d=e.data; try{ if(typeof d==="string") d=JSON.parse(d); }catch(_){ return; }
-  if(d.event==="ready") ifr.contentWindow.postMessage(JSON.stringify({method:"addEventListener",value:"ended"}),"https://player.vimeo.com");
-  if(d.event==="ended") showEnd();
+  if(d.event==="ready") ["finish","ended"].forEach(v=>ifr.contentWindow.postMessage(JSON.stringify({method:"addEventListener",value:v}),"https://player.vimeo.com"));
+  if(d.event==="finish"||d.event==="ended") showEnd();
 });
 function showEnd(){
   const w=work[cur], nx=work[(cur+1)%work.length];
