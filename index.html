@@ -107,11 +107,12 @@ h2{font-family:var(--display);font-stretch:62%;font-weight:800;text-transform:up
 .still{position:relative;aspect-ratio:16/9;max-width:100%;border-radius:2px;overflow:hidden;background:#000}
 .still .frame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:transform .5s}
 .still .frame{transition:transform .5s, filter .4s}
-.card:hover .frame,.card:focus-visible .frame{transform:scale(1.04);filter:grayscale(0) contrast(1)}
+.card:focus-visible .frame,.card.touch .frame{transform:scale(1.04);filter:grayscale(0) contrast(1)}
 .still .burn{position:absolute;left:8px;bottom:6px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.85);text-shadow:0 1px 2px #000;z-index:1}
 .still .ar{position:absolute;right:8px;top:6px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.75);z-index:1}
 .still .play{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .2s;z-index:1}
-.card:hover .play,.card:focus-visible .play{opacity:1}
+.card:focus-visible .play,.card.touch .play{opacity:1}
+@media (hover:hover){.card:hover .frame{transform:scale(1.04);filter:grayscale(0) contrast(1)}.card:hover .play{opacity:1}}   /* touch screens use .touch instead, so a tapped card doesn't stay stuck in colour */
 .play span{background:var(--accent);color:var(--accent-ink);font:500 11px var(--mono);letter-spacing:.1em;padding:7px 12px;border-radius:2px}
 .card h3{font-family:var(--display);font-stretch:100%;font-weight:600;font-size:19px;margin:0;line-height:1.25}
 .meta{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:13px;color:var(--muted);margin:0}
@@ -389,6 +390,13 @@ const onScrollbar=e=>{ const r=tlScroll.getBoundingClientRect(), bar=tlScroll.of
 const hoverScrub=matchMedia("(hover: hover)").matches;
 if(hoverScrub) tlBox.addEventListener("mousemove",e=>{ if(onScrollbar(e)) return; const r=v1.getBoundingClientRect(); pos=Math.max(0,Math.min(total,xToTime(e.clientX-r.left))); place(pos); });
 
+// Phones/tablets: a work card colours and zooms while a finger is on it, like the desktop hover
+(function(){
+  const g=document.getElementById("grid"); let lit=null, t=null;
+  const off=()=>{ if(lit){ const c=lit; t=setTimeout(()=>c.classList.remove("touch"),250); lit=null; } };
+  g.addEventListener("touchstart",e=>{ const c=e.target.closest(".card"); if(!c) return; clearTimeout(t); if(lit&&lit!==c) lit.classList.remove("touch"); lit=c; c.classList.add("touch"); },{passive:true});
+  g.addEventListener("touchend",off,{passive:true}); g.addEventListener("touchcancel",off,{passive:true});
+})();
 let dock=null;   // set below; the touch scrubber drives it on phones and tablets
 // Dock-style magnification: clips near the cursor get taller AND wider, pushing their neighbours aside.
 // The reel tightens elsewhere to make room, so nothing overlaps; A1, the ruler and the playhead follow the cuts.
