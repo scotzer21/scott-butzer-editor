@@ -91,6 +91,7 @@ h1 em{font-style:normal;font-stretch:125%;font-weight:400;font-size:.38em;displa
 /* the sticky V1/A1 gutter is one solid column: it covers the gaps between tracks and the space magnified clips grow into, so nothing peeks out from behind it */
 .track-id::after{content:"";position:absolute;left:0;right:0;top:-9px;bottom:-9px;background:var(--surface);z-index:-1}
 .track:not(.a) .track-id::after{top:-80px}
+.tl-head{position:relative;z-index:60}   /* reel name and timecode always sit above the V1/A1 gutter */
 .track.a .track-id::after{bottom:-14px}
 
 /* Work */
