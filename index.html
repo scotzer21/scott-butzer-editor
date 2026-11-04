@@ -554,9 +554,16 @@ const endCard=document.getElementById("pl-end");
 addEventListener("message",e=>{
   if(e.origin!=="https://player.vimeo.com" || e.source!==ifr.contentWindow) return;
   let d=e.data; try{ if(typeof d==="string") d=JSON.parse(d); }catch(_){ return; }
-  if(d.event==="ready") ["finish","ended"].forEach(v=>ifr.contentWindow.postMessage(JSON.stringify({method:"addEventListener",value:v}),"https://player.vimeo.com"));
+  const send=o=>ifr.contentWindow.postMessage(JSON.stringify(o),"https://player.vimeo.com");
+  if(d.event==="ready") ["finish","ended","play","playProgress","timeupdate","pause"].forEach(v=>send({method:"addEventListener",value:v}));
   if(d.event==="finish"||d.event==="ended") showEnd();
+  // Phones open films in the phone's own full-screen player; now and then it opens on a frozen frame without starting.
+  // Watchdog: if play was pressed but the picture hasn't advanced shortly after, nudge it to play (twice at most).
+  if(d.event==="play"){ clearTimeout(stall.t); stall.moved=false; stall.tries=0; const check=()=>{ if(stall.moved||stall.paused||stall.tries>=2||player.hidden) return; stall.tries++; send({method:"play"}); stall.t=setTimeout(check,2500); }; stall.paused=false; stall.t=setTimeout(check,2500); }
+  if(d.event==="playProgress"||d.event==="timeupdate"){ const sec=d.data&&d.data.seconds; if(sec>0.3) stall.moved=true; }
+  if(d.event==="pause" && stall.moved){ stall.paused=true; clearTimeout(stall.t); }   // a pause before any picture moved is the stall itself, not the viewer
 });
+const stall={t:0,moved:false,paused:false,tries:0};
 function showEnd(){
   const w=work[cur], nx=work[(cur+1)%work.length];
   document.getElementById("pl-end-bg").style.backgroundImage=`url("${still(w)}")`;
