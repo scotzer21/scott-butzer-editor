@@ -80,6 +80,7 @@ h1 em{font-style:normal;font-stretch:125%;font-weight:400;font-size:.38em;displa
 .track.a .clips{height:16px}
 .track.a .clip{background:color-mix(in srgb,var(--clr) 45%,var(--surface));padding:0;border-color:transparent}
 .playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);left:0;pointer-events:none;z-index:40}
+@media (hover:hover){.playhead{top:-20px}}   /* desktop: stand taller than fully magnified clips */
 .playhead::before{content:"";position:absolute;top:0;left:-5px;border:6px solid transparent;border-top:8px solid var(--accent)}
 .tl-scroll{overflow-x:auto;overflow-y:hidden;padding-top:44px;margin-top:-44px;padding-bottom:10px;margin-bottom:-10px;scrollbar-width:thin;scrollbar-color:var(--muted) transparent}
 .tl-scroll::-webkit-scrollbar{height:8px}
