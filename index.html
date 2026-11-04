@@ -375,7 +375,11 @@ if(reduce){place(pos)}else{
 }
 addEventListener("resize",()=>{placeRuler();place(pos)});
 placeRuler();
-v1.addEventListener("mousemove",e=>{const r=v1.getBoundingClientRect();pos=Math.max(0,Math.min(total,xToTime(e.clientX-r.left)));place(pos)});
+// Desktop: the whole timeline panel drives the playhead (top edge to bottom), except the reel's scrollbar
+const tlBox=document.querySelector(".timeline"), tlScroll=document.getElementById("tl-scroll");
+const onScrollbar=e=>{ const r=tlScroll.getBoundingClientRect(), bar=tlScroll.offsetHeight-tlScroll.clientHeight; return bar>0 && e.clientY>=r.bottom-bar-2 && e.clientY<=r.bottom+2; };
+const hoverScrub=matchMedia("(hover: hover)").matches;
+if(hoverScrub) tlBox.addEventListener("mousemove",e=>{ if(onScrollbar(e)) return; const r=v1.getBoundingClientRect(); pos=Math.max(0,Math.min(total,xToTime(e.clientX-r.left))); place(pos); });
 
 let dock=null;   // set below; the touch scrubber drives it on phones and tablets
 // Dock-style magnification: clips near the cursor get taller AND wider, pushing their neighbours aside.
@@ -414,9 +418,9 @@ let dock=null;   // set below; the touch scrubber drives it on phones and tablet
   const at=x=>{ cx=x; mx=x - v1.getBoundingClientRect().left; kick(); };
   dock={ start:measureRest, move:at, end:()=>{ mx=null; cx=null; kick(); } };
   if(matchMedia("(hover: hover)").matches){
-    v1.addEventListener("mouseenter",()=>{ measureRest(); });
-    v1.addEventListener("mousemove",e=>at(e.clientX));
-    v1.addEventListener("mouseleave",dock.end);
+    tlBox.addEventListener("mouseenter",()=>{ measureRest(); });
+    tlBox.addEventListener("mousemove",e=>{ if(onScrollbar(e)) dock.end(); else at(e.clientX); });
+    tlBox.addEventListener("mouseleave",dock.end);
   }
   addEventListener("resize",()=>{ if(rest.length) measureRest(); });
 })();
@@ -439,12 +443,12 @@ let dock=null;   // set below; the touch scrubber drives it on phones and tablet
     const max=sc.scrollWidth-sc.clientWidth, before=sc.scrollLeft;
     if(vel && ((vel<0 && before>0) || (vel>0 && before<max))){
       sc.scrollLeft=Math.max(0,Math.min(max,before+vel));
-      v1.dispatchEvent(new MouseEvent("mousemove",{clientX:px,clientY:py,bubbles:true}));   // re-scrub at the new scroll position
+      tlBox.dispatchEvent(new MouseEvent("mousemove",{clientX:px,clientY:py,bubbles:true}));   // re-scrub at the new scroll position
       requestAnimationFrame(tick);
     } else running=false;
   }
-  v1.addEventListener("mousemove",e=>{ if(!e.isTrusted) return; px=e.clientX; py=e.clientY; if(!running && speed()){running=true;requestAnimationFrame(tick)} });
-  v1.addEventListener("mouseleave",()=>{ px=null; });
+  tlBox.addEventListener("mousemove",e=>{ if(!e.isTrusted) return; if(onScrollbar(e)){ px=null; return; } px=e.clientX; py=e.clientY; if(!running && speed()){running=true;requestAnimationFrame(tick)} });
+  tlBox.addEventListener("mouseleave",()=>{ px=null; });
 })();
 
 // Touch (phones and tablets): the clips scroll the reel natively and a tap opens one. Touching anywhere else in the timeline
