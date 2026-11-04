@@ -394,19 +394,23 @@ const hoverScrub=matchMedia("(hover: hover)").matches;
 if(hoverScrub) tlBox.addEventListener("mousemove",e=>{ if(onScrollbar(e)) return; const r=v1.getBoundingClientRect(); pos=Math.max(0,Math.min(total,xToTime(e.clientX-r.left))); place(pos); });
 
 // Phones/tablets: a work card colours and zooms under a finger, like the desktop hover.
-// Lights on the very first contact, including the tap that stops a swipe's momentum (listened for at the document,
-// in capture, via both touch and pointer events so iOS can't swallow it). Only one card is ever lit; after the finger
-// lifts it holds its colour briefly, then fades - sooner if the page is scrolled on.
+// The card is found from the finger's screen position (not the event target), and re-checked as the finger moves and as
+// the page scrolls under it - so the tap that stops a swipe lights the card it lands on, even when iOS reports the
+// touch or its scroll position late. Only one card is ever lit; after the finger lifts it holds its colour ~1s, then fades.
 (function(){
-  const g=document.getElementById("grid"); let cur=null, y0=0;
-  const clearAll=keep=>g.querySelectorAll(".card.touch").forEach(c=>{ if(c!==keep){ clearTimeout(c._t); c.classList.remove("touch"); } });
-  const light=(target)=>{ const c=target&&target.closest&&target.closest("#grid .card"); clearAll(c); cur=c; if(c){ clearTimeout(c._t); c.classList.add("touch"); } };
-  document.addEventListener("touchstart",e=>light(e.target),{passive:true,capture:true});
-  document.addEventListener("pointerdown",e=>{ if(e.pointerType!=="mouse") light(e.target); },{passive:true,capture:true});
-  const off=()=>{ const c=cur; cur=null; y0=scrollY; if(c){ clearTimeout(c._t); c._t=setTimeout(()=>c.classList.remove("touch"),900); } };
-  document.addEventListener("touchend",off,{passive:true,capture:true}); document.addEventListener("touchcancel",off,{passive:true,capture:true});
-  addEventListener("scroll",()=>{ if(!cur && Math.abs(scrollY-y0)>120) clearAll(null); },{passive:true});
-  addEventListener("pageshow",()=>clearAll(null)); document.addEventListener("visibilitychange",()=>clearAll(null));
+  const g=document.getElementById("grid"); let lit=null, fx=null, fy=null;
+  const cardAt=(x,y)=>{ const el=document.elementFromPoint(x,y); return el&&el.closest("#grid .card"); };
+  const set=c=>{ if(lit&&lit!==c){ clearTimeout(lit._t); lit.classList.remove("touch"); } lit=c||null; if(lit){ clearTimeout(lit._t); lit.classList.add("touch"); } };
+  const track=(x,y)=>{ fx=x; fy=y; set(cardAt(x,y)); };
+  document.addEventListener("touchstart",e=>{ const t=e.touches[0]; if(t) track(t.clientX,t.clientY); },{passive:true,capture:true});
+  document.addEventListener("touchmove",e=>{ const t=e.touches[0]; if(t) track(t.clientX,t.clientY); },{passive:true,capture:true});
+  document.addEventListener("pointerdown",e=>{ if(e.pointerType!=="mouse") track(e.clientX,e.clientY); },{passive:true,capture:true});
+  addEventListener("scroll",()=>{ if(fx!==null) set(cardAt(fx,fy)); },{passive:true});
+  const up=()=>{ fx=fy=null; const c=lit; if(c){ clearTimeout(c._t); c._t=setTimeout(()=>{ c.classList.remove("touch"); if(lit===c) lit=null; },1000); } };
+  document.addEventListener("touchend",e=>{ if(!e.touches.length) up(); },{passive:true,capture:true});
+  document.addEventListener("touchcancel",up,{passive:true,capture:true});
+  const clear=()=>{ fx=fy=null; set(null); };
+  addEventListener("pageshow",clear); document.addEventListener("visibilitychange",clear);
 })();
 let dock=null;   // set below; the touch scrubber drives it on phones and tablets
 // Dock-style magnification: clips near the cursor get taller AND wider, pushing their neighbours aside.
