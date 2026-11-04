@@ -114,6 +114,13 @@ h2{font-family:var(--display);font-stretch:62%;font-weight:800;text-transform:up
 .player-in{width:min(1200px,100%);display:grid;gap:12px}
 .pl-frame{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;background:#000}
 .pl-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.pl-end{position:absolute;inset:0;overflow:hidden;background:#000}
+.pl-end-bg{position:absolute;inset:-20px;background:center/cover no-repeat;filter:grayscale(1) blur(6px) brightness(.45)}
+.pl-end-in{position:relative;height:100%;display:grid;place-content:center;justify-items:center;gap:18px;padding:16px;text-align:center}
+.pl-end-label{font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#bdbdbd}
+.pl-end-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.player .pl-end-btns button{font:500 13px var(--mono);padding:10px 16px;background:rgba(0,0,0,.35);border-color:#888;max-width:100%}
+.player .pl-end-btns button:hover{background:#f2f2f2;color:#111;border-color:#f2f2f2}
 .pl-soon{position:absolute;inset:0;display:grid;place-items:center;margin:0;color:#a8a8a8;font:500 13px var(--mono);letter-spacing:.06em}
 .player-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#f2f2f2;flex-wrap:wrap}
 .player-bar h3{font-family:var(--display);font-weight:600;font-size:18px;margin:0}
@@ -214,7 +221,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 
 <div class="player" id="player" hidden role="dialog" aria-modal="true" aria-labelledby="pl-title">
   <div class="player-in">
-    <div class="pl-frame" id="pl-frame"><iframe id="pl-iframe" title="Video player" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen hidden></iframe><p class="pl-soon" id="pl-soon" hidden>Video coming soon.</p></div>
+    <div class="pl-frame" id="pl-frame"><iframe id="pl-iframe" title="Video player" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen hidden></iframe><div class="pl-end" id="pl-end" hidden><div class="pl-end-bg" id="pl-end-bg"></div><div class="pl-end-in"><span class="pl-end-label">End of piece</span><div class="pl-end-btns"><button type="button" id="pl-replay">↺ Replay</button><button type="button" id="pl-upnext">Next ▶ <span id="pl-upnext-name"></span></button></div></div></div><p class="pl-soon" id="pl-soon" hidden>Video coming soon.</p></div>
     <div class="player-bar"><div><h3 id="pl-title"></h3><span class="mono" id="pl-meta"></span></div>
       <div class="player-btns"><button type="button" id="pl-prev">◀ Prev</button><button type="button" id="pl-next">Next ▶</button><button type="button" id="pl-close">Close ✕</button></div></div>
   </div>
@@ -468,6 +475,23 @@ CATS.forEach(([cat,label])=>{
 
 // Player
 const player=document.getElementById("player"), ifr=document.getElementById("pl-iframe"), soon=document.getElementById("pl-soon");
+const endCard=document.getElementById("pl-end");
+// When a Vimeo video finishes, show our own end card instead of Vimeo's "More from…" screen
+addEventListener("message",e=>{
+  if(e.origin!=="https://player.vimeo.com" || e.source!==ifr.contentWindow) return;
+  let d=e.data; try{ if(typeof d==="string") d=JSON.parse(d); }catch(_){ return; }
+  if(d.event==="ready") ifr.contentWindow.postMessage(JSON.stringify({method:"addEventListener",value:"ended"}),"https://player.vimeo.com");
+  if(d.event==="ended") showEnd();
+});
+function showEnd(){
+  const w=work[cur], nx=work[(cur+1)%work.length];
+  document.getElementById("pl-end-bg").style.backgroundImage=`url("${still(w)}")`;
+  document.getElementById("pl-upnext-name").textContent=name(nx);
+  ifr.src="about:blank"; ifr.hidden=true; endCard.hidden=false;
+  document.getElementById("pl-upnext").focus();
+}
+document.getElementById("pl-replay").onclick=()=>openPlayer(cur);
+document.getElementById("pl-upnext").onclick=()=>openPlayer(cur+1);
 function vimeoSrc(url){                       // vimeo.com/123 or vimeo.com/123/abcdef (unlisted) -> player URL
   const m=String(url||"").match(/vimeo\.com\/(?:video\/)?(\d+)(?:\/([0-9a-f]+))?(?:.*[?&]h=([0-9a-f]+))?/i); if(!m) return "";
   const h=m[2]||m[3]; return `https://player.vimeo.com/video/${m[1]}?${h?"h="+h+"&":""}autoplay=1&title=0&byline=0&portrait=0&dnt=1`;
@@ -477,13 +501,13 @@ function openPlayer(i){
   cur=(i+work.length)%work.length; const w=work[cur];
   if(player.hidden) opener=document.activeElement;
   const src=vimeoSrc(VIMEO[w.k]);
-  ifr.hidden=!src; soon.hidden=!!src; ifr.src=src||"about:blank";
+  endCard.hidden=true; ifr.hidden=!src; soon.hidden=!!src; ifr.src=src||"about:blank";
   document.getElementById("pl-title").textContent=name(w);
   document.getElementById("pl-meta").textContent=`Editor${w.note?" · "+w.note:""} · ${dur(w.len)} · ${w.fps} fps`;
   player.hidden=false; document.body.style.overflow="hidden";
   document.getElementById("pl-close").focus();
 }
-function closePlayer(){ifr.src="about:blank";player.hidden=true;document.body.style.overflow="";opener&&opener.focus()}
+function closePlayer(){ifr.src="about:blank";endCard.hidden=true;player.hidden=true;document.body.style.overflow="";opener&&opener.focus()}
 document.getElementById("pl-close").onclick=closePlayer;
 document.getElementById("pl-next").onclick=()=>openPlayer(cur+1);
 document.getElementById("pl-prev").onclick=()=>openPlayer(cur-1);
