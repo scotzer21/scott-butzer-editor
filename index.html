@@ -192,7 +192,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
         <p>Scott’s work has been honored throughout the industry, receiving AICP awards for the Vince Staples’ <em>Fun!</em> music video and Frito-Lay’s <em>Taste of Soccer</em>. Scott’s work for Google’s 2020 <em>Year in Search</em> was awarded multiple Webby Awards among others and has amassed over 250 million views worldwide.</p>
         <p>Before going freelance, Scott worked out of Los Angeles at Whitehouse Post, Final Cut, and Cabin Editing Company. Butzer has worked with ad agencies and directors, including Wieden + Kennedy; Goodby, Silverstein &amp; Partners; Apple; We Are From LA, Marcus Söderlund, and Jonathan Krisel.</p>
         <span class="label" style="display:block;margin-top:28px">Clients</span>
-        <div class="clients"><span>Apple</span><span>BMW</span><span>Mercedes-Benz</span><span>Porsche</span><span>MINI</span><span>Lexus</span><span>Toyota</span><span>Nissan</span><span>INFINITI</span><span>Gatorade</span><span>Frito-Lay</span><span>RIMOWA</span><span>YouTube Music</span><span>Tecovas</span><span>Saint Archer</span></div>
+        <div class="clients" id="clients"></div>
       </div>
       <figure class="portrait"><img src="media/scott.jpg" alt="Scott Butzer in front of a mountain in Colorado" width="1000" height="1000"></figure>
     </div>
@@ -430,6 +430,14 @@ v1.addEventListener("mousemove",e=>{const r=v1.getBoundingClientRect();pos=Math.
   v1.addEventListener("mousemove",e=>{ if(!e.isTrusted) return; px=e.clientX; py=e.clientY; if(!running && speed()){running=true;requestAnimationFrame(tick)} });
   v1.addEventListener("mouseleave",()=>{ px=null; });
 })();
+
+// Clients: built from the work on the site, in site order. Documentaries credit the brand behind them.
+{
+  const CLIENT_OF={haim:"Red Bull", jviewz:"Motorola", jidvans:"Vans", bohan:"Vans", shinya:null};
+  const seen=new Set(), box=document.getElementById("clients");
+  work.forEach(w=>{ const c = (w.k in CLIENT_OF) ? CLIENT_OF[w.k] : w.client; if(!c||seen.has(c)) return; seen.add(c);
+    const sp=document.createElement("span"); sp.textContent=c; box.append(sp); });
+}
 
 // Work grid
 // Fixed categories: the filter row always shows these, even before a category has any work in it
