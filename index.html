@@ -69,6 +69,7 @@ h1 em{font-style:normal;font-stretch:125%;font-weight:400;font-size:.38em;displa
 #v1 .clip b,#v1 .clip i{text-shadow:0 1px 3px rgba(0,0,0,.6)}
 #v1 .clip b{font-size:calc(12px + var(--k,0) * 3px)}
 #v1 .clip.lit,#v1 .clip:focus-visible{filter:grayscale(0)}
+@media (hover:none){#v1{touch-action:pan-y}#v1 .clip{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}}
 @media (hover:none){#v1 .clip:active{filter:grayscale(0)}}
 @media (prefers-reduced-motion:reduce){#v1 .clip:hover{filter:grayscale(0)}}
 .clip b{font-family:var(--display);font-stretch:85%;font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
@@ -373,10 +374,11 @@ addEventListener("resize",()=>{placeRuler();place(pos)});
 placeRuler();
 v1.addEventListener("mousemove",e=>{const r=v1.getBoundingClientRect();pos=Math.max(0,Math.min(total,xToTime(e.clientX-r.left)));place(pos)});
 
+let dock=null;   // set below; the touch scrubber drives it on phones and tablets
 // Dock-style magnification: clips near the cursor get taller AND wider, pushing their neighbours aside.
 // The reel tightens elsewhere to make room, so nothing overlaps; A1, the ruler and the playhead follow the cuts.
 (function(){
-  if(reduce || !matchMedia("(hover: hover)").matches) return;
+  if(reduce) return;
   const clips=[...v1.children], audio=[...document.getElementById("a1").children];
   const MAX=1.42, GROW=70, R=140;   // peak height scale, max extra width in px, falloff radius in px
   const cur=clips.map(()=>0), tgt=clips.map(()=>0);
@@ -406,9 +408,13 @@ v1.addEventListener("mousemove",e=>{const r=v1.getBoundingClientRect();pos=Math.
     if(moving) requestAnimationFrame(frame); else running=false;
   }
   function kick(){ if(!running){running=true;requestAnimationFrame(frame)} }
-  v1.addEventListener("mouseenter",()=>{ measureRest(); });
-  v1.addEventListener("mousemove",e=>{ cx=e.clientX; mx=e.clientX - v1.getBoundingClientRect().left; kick(); if(!running) frame(); });
-  v1.addEventListener("mouseleave",()=>{ mx=null; cx=null; kick(); });
+  const at=x=>{ cx=x; mx=x - v1.getBoundingClientRect().left; kick(); };
+  dock={ start:measureRest, move:at, end:()=>{ mx=null; cx=null; kick(); } };
+  if(matchMedia("(hover: hover)").matches){
+    v1.addEventListener("mouseenter",()=>{ measureRest(); });
+    v1.addEventListener("mousemove",e=>at(e.clientX));
+    v1.addEventListener("mouseleave",dock.end);
+  }
   addEventListener("resize",()=>{ if(rest.length) measureRest(); });
 })();
 
@@ -438,33 +444,33 @@ v1.addEventListener("mousemove",e=>{const r=v1.getBoundingClientRect();pos=Math.
   v1.addEventListener("mouseleave",()=>{ px=null; });
 })();
 
-// Touch scrubbing (phones and tablets): drag a finger along V1 to move the playhead. The clip under the finger lights up,
-// dragging near either edge scrolls the reel, a quick tap still opens the clip, and vertical swipes still scroll the page.
+// Touch scrubbing (phones and tablets): drag a finger sideways along V1 and the playhead, timecode and dock magnification
+// follow it; near either edge the reel scrolls. Vertical swipes still scroll the page, and a quick tap still opens the clip.
 (function(){
   if(matchMedia("(hover: hover)").matches) return;
   const sc=document.getElementById("tl-scroll"), LABEL=34, EDGE=60, MAXV=12;
-  v1.style.touchAction="pan-y";
-  let down=false, moved=false, sx=0, sy=0, px=0, running=false, id=null;
-  function scrubTo(x){
-    const r=v1.getBoundingClientRect(); pos=Math.max(0,Math.min(total,xToTime(x-r.left))); place(pos);
-    [...v1.children].forEach(c=>{const b=c.getBoundingClientRect(); c.classList.toggle("lit", x>=b.left && x<b.right);});
-  }
+  let mode=null, sx=0, sy=0, px=0, running=false, dragged=false;
+  function lit(x){ [...v1.children].forEach(c=>{const b=c.getBoundingClientRect(); c.classList.toggle("lit", x!==null && x>=b.left && x<b.right);}); }
+  function scrubTo(x){ const r=v1.getBoundingClientRect(); pos=Math.max(0,Math.min(total,xToTime(x-r.left))); place(pos);
+    if(dock) dock.move(x); else lit(x); }
   function speed(){ const r=sc.getBoundingClientRect(), l=r.left+LABEL;
     if(px<l+EDGE) return -MAXV*Math.min(1,(l+EDGE-px)/EDGE); if(px>r.right-EDGE) return MAXV*Math.min(1,(px-(r.right-EDGE))/EDGE); return 0; }
-  function tick(){ if(!down||!moved){running=false;return;} const v=speed(), max=sc.scrollWidth-sc.clientWidth;
+  function tick(){ if(mode!=="scrub"){ running=false; return; } const v=speed(), max=sc.scrollWidth-sc.clientWidth;
     if(v && ((v<0&&sc.scrollLeft>0)||(v>0&&sc.scrollLeft<max))){ sc.scrollLeft=Math.max(0,Math.min(max,sc.scrollLeft+v)); scrubTo(px); }
     requestAnimationFrame(tick); }
-  v1.addEventListener("pointerdown",e=>{ if(e.pointerType==="mouse") return; down=true; moved=false; sx=px=e.clientX; sy=e.clientY; id=e.pointerId; });
-  v1.addEventListener("pointermove",e=>{
-    if(!down||e.pointerId!==id) return; px=e.clientX;
-    if(!moved){ if(Math.abs(px-sx)<8) return; if(Math.abs(e.clientY-sy)>Math.abs(px-sx)){ down=false; return; }
-      moved=true; try{v1.setPointerCapture(id)}catch(_){} if(!running){running=true;requestAnimationFrame(tick);} }
+  v1.addEventListener("touchstart",e=>{ if(e.touches.length!==1){ mode=null; return; } const t=e.touches[0];
+    mode="pending"; dragged=false; sx=px=t.clientX; sy=t.clientY; },{passive:true});
+  v1.addEventListener("touchmove",e=>{
+    if(!mode||mode==="page") return; const t=e.touches[0]; px=t.clientX;
+    if(mode==="pending"){ const dx=Math.abs(px-sx), dy=Math.abs(t.clientY-sy); if(dx<6&&dy<6) return;
+      if(dy>dx){ mode="page"; return; }                          // vertical: let the page scroll
+      mode="scrub"; dragged=true; if(dock) dock.start(); if(!running){ running=true; requestAnimationFrame(tick); } }
+    e.preventDefault();                                          // sideways: this drag is ours, not a scroll
     scrubTo(px);
-  });
-  const end=()=>{ if(!down) return; down=false; setTimeout(()=>[...v1.children].forEach(c=>c.classList.remove("lit")),700); };
-  v1.addEventListener("pointerup",end); v1.addEventListener("pointercancel",end);
-  // a drag is not a tap: don't open the clip the finger lifted on
-  v1.addEventListener("click",e=>{ if(moved){ e.stopPropagation(); e.preventDefault(); moved=false; } },true);
+  },{passive:false});
+  const end=()=>{ if(mode==="scrub"){ if(dock) dock.end(); else setTimeout(()=>lit(null),600); } mode=null; };
+  v1.addEventListener("touchend",end); v1.addEventListener("touchcancel",end);
+  v1.addEventListener("click",e=>{ if(dragged){ e.stopPropagation(); e.preventDefault(); dragged=false; } },true);
 })();
 
 // Clients: built from the work on the site, in site order. Documentaries credit the brand behind them.
