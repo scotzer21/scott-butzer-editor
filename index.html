@@ -121,7 +121,10 @@ h2{font-family:var(--display);font-stretch:62%;font-weight:800;text-transform:up
 .player{position:fixed;inset:0;z-index:1000;background:rgba(10,10,10,.94);display:grid;place-items:center;
   padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .player[hidden]{display:none}
-.player-in{width:min(1200px,100%);display:grid;gap:12px}
+.player{overflow-y:auto;overscroll-behavior:contain}
+/* the video is sized to the screen's height as well as its width, so the title bar and Prev / Next / Close always fit below it */
+.player-in{width:min(1200px,100%,calc((100vh - 140px)*16/9));display:grid;gap:12px}
+@supports (height:100dvh){.player-in{width:min(1200px,100%,calc((100dvh - 140px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))*16/9))}}
 .pl-frame{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;background:#000}
 .pl-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .pl-end{position:absolute;inset:0;overflow:hidden;background:#000}
