@@ -69,7 +69,10 @@ h1 em{font-style:normal;font-stretch:125%;font-weight:400;font-size:.38em;displa
 #v1 .clip b,#v1 .clip i{text-shadow:0 1px 3px rgba(0,0,0,.6)}
 #v1 .clip b{font-size:calc(12px + var(--k,0) * 3px)}
 #v1 .clip.lit,#v1 .clip:focus-visible{filter:grayscale(0)}
-@media (hover:none){#v1{touch-action:pan-y}#v1 .clip{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}}
+@media (hover:none){#v1 .clip{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+  .ruler,.track.a{touch-action:pan-y;-webkit-user-select:none;user-select:none}
+  .ruler{height:30px}.ruler span::after{top:25px}
+  .track.a .clips{height:28px}}
 @media (hover:none){#v1 .clip:active{filter:grayscale(0)}}
 @media (prefers-reduced-motion:reduce){#v1 .clip:hover{filter:grayscale(0)}}
 .clip b{font-family:var(--display);font-stretch:85%;font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
@@ -444,12 +447,13 @@ let dock=null;   // set below; the touch scrubber drives it on phones and tablet
   v1.addEventListener("mouseleave",()=>{ px=null; });
 })();
 
-// Touch scrubbing (phones and tablets): drag a finger sideways along V1 and the playhead, timecode and dock magnification
-// follow it; near either edge the reel scrolls. Vertical swipes still scroll the page, and a quick tap still opens the clip.
+// Touch (phones and tablets): the clips scroll the reel natively and a tap opens one. Touching the ruler above the clips or
+// the audio strip below them jumps the playhead there; sliding keeps it under the finger, the clips magnify beneath it,
+// and near either edge the reel scrolls along.
 (function(){
   if(matchMedia("(hover: hover)").matches) return;
-  const sc=document.getElementById("tl-scroll"), LABEL=34, EDGE=60, MAXV=12;
-  let mode=null, sx=0, sy=0, px=0, running=false, dragged=false;
+  const sc=document.getElementById("tl-scroll"), body=document.getElementById("tl-body"), LABEL=34, EDGE=60, MAXV=12;
+  let mode=null, sy=0, sx=0, px=0, running=false;
   function lit(x){ [...v1.children].forEach(c=>{const b=c.getBoundingClientRect(); c.classList.toggle("lit", x!==null && x>=b.left && x<b.right);}); }
   function scrubTo(x){ const r=v1.getBoundingClientRect(); pos=Math.max(0,Math.min(total,xToTime(x-r.left))); place(pos);
     if(dock) dock.move(x); else lit(x); }
@@ -458,19 +462,19 @@ let dock=null;   // set below; the touch scrubber drives it on phones and tablet
   function tick(){ if(mode!=="scrub"){ running=false; return; } const v=speed(), max=sc.scrollWidth-sc.clientWidth;
     if(v && ((v<0&&sc.scrollLeft>0)||(v>0&&sc.scrollLeft<max))){ sc.scrollLeft=Math.max(0,Math.min(max,sc.scrollLeft+v)); scrubTo(px); }
     requestAnimationFrame(tick); }
-  v1.addEventListener("touchstart",e=>{ if(e.touches.length!==1){ mode=null; return; } const t=e.touches[0];
-    mode="pending"; dragged=false; sx=px=t.clientX; sy=t.clientY; },{passive:true});
-  v1.addEventListener("touchmove",e=>{
-    if(!mode||mode==="page") return; const t=e.touches[0]; px=t.clientX;
-    if(mode==="pending"){ const dx=Math.abs(px-sx), dy=Math.abs(t.clientY-sy); if(dx<6&&dy<6) return;
-      if(dy>dx){ mode="page"; return; }                          // vertical: let the page scroll
-      mode="scrub"; dragged=true; if(dock) dock.start(); if(!running){ running=true; requestAnimationFrame(tick); } }
-    e.preventDefault();                                          // sideways: this drag is ours, not a scroll
-    scrubTo(px);
+  body.addEventListener("touchstart",e=>{
+    if(e.touches.length!==1 || e.target.closest("#v1") || e.target.closest(".track-id")) { mode=null; return; }   // clips and labels: leave to the browser
+    const t=e.touches[0]; sx=px=t.clientX; sy=t.clientY; mode="scrub";
+    if(dock) dock.start(); scrubTo(px);                                   // the playhead jumps to the finger right away
+    if(!running){ running=true; requestAnimationFrame(tick); }
+  },{passive:true});
+  body.addEventListener("touchmove",e=>{
+    if(mode!=="scrub") return; const t=e.touches[0];
+    if(Math.abs(t.clientY-sy)>40 && Math.abs(t.clientY-sy)>Math.abs(t.clientX-sx)*2){ end(); return; }   // clearly a vertical swipe: let the page scroll
+    e.preventDefault(); px=t.clientX; scrubTo(px);
   },{passive:false});
-  const end=()=>{ if(mode==="scrub"){ if(dock) dock.end(); else setTimeout(()=>lit(null),600); } mode=null; };
-  v1.addEventListener("touchend",end); v1.addEventListener("touchcancel",end);
-  v1.addEventListener("click",e=>{ if(dragged){ e.stopPropagation(); e.preventDefault(); dragged=false; } },true);
+  function end(){ if(mode==="scrub"){ if(dock) dock.end(); else setTimeout(()=>lit(null),600); } mode=null; }
+  body.addEventListener("touchend",end); body.addEventListener("touchcancel",end);
 })();
 
 // Clients: built from the work on the site, in site order. Documentaries credit the brand behind them.
