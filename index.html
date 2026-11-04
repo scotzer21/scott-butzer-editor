@@ -558,6 +558,8 @@ addEventListener("message",e=>{
   let d=e.data; try{ if(typeof d==="string") d=JSON.parse(d); }catch(_){ return; }
   const send=o=>ifr.contentWindow.postMessage(JSON.stringify(o),"https://player.vimeo.com");
   if(d.event==="ready") ["finish","ended","play","playProgress","timeupdate","pause"].forEach(v=>send({method:"addEventListener",value:v}));
+  // Captions off by default - the phone's own full-screen player otherwise switches on Vimeo's auto-generated captions
+  if(d.event==="ready"||d.event==="play") send({method:"disableTextTrack"});
   if(d.event==="finish"||d.event==="ended") showEnd();
   // Phones open films in the phone's own full-screen player; now and then it opens on a frozen frame without starting.
   // Watchdog: if play was pressed but the picture hasn't advanced shortly after, nudge it to play (twice at most).
@@ -581,7 +583,7 @@ function vimeoSrc(url){                       // vimeo.com/123 or vimeo.com/123/
   const touch=matchMedia("(hover: none) and (pointer: coarse)").matches || /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
   // Phones: playsinline=0 makes the film jump to the phone's own full-screen player the moment play is tapped, where turning the phone sideways fills the screen
   const phone=touch && Math.min(screen.width,screen.height)<600;
-  const h=m[2]||m[3]; return `https://player.vimeo.com/video/${m[1]}?${h?"h="+h+"&":""}${touch?"":"autoplay=1&"}title=0&byline=0&portrait=0&badge=0&vimeo_logo=0&dnt=1&playsinline=${phone?0:1}`;
+  const h=m[2]||m[3]; return `https://player.vimeo.com/video/${m[1]}?${h?"h="+h+"&":""}${touch?"":"autoplay=1&"}title=0&byline=0&portrait=0&badge=0&vimeo_logo=0&dnt=1&texttrack=false&playsinline=${phone?0:1}`;
 }
 let cur=0, opener=null;
 function openPlayer(i){
