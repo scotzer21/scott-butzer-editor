@@ -368,11 +368,14 @@ function place(sec){
   document.querySelectorAll("#v1 .clip").forEach(c=>{const w=work[c.dataset.i];c.classList.toggle("hot",sec>=w.in&&sec<w.in+w.len&&sec<total)});
 }
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-let pos=Math.min(VIEW,total);
+let pos=Math.min(VIEW,total), introStop=false;
 if(reduce){place(pos)}else{
   const t0=performance.now(),D=5000;
   const end=Math.min(VIEW,total);
-  (function anim(now){const k=Math.min(1,(now-t0)/D);pos=end*(1-Math.pow(1-k,3));place(pos);if(k<1)requestAnimationFrame(anim)})(t0);
+  (function anim(now){if(introStop)return;const k=Math.min(1,(now-t0)/D);pos=end*(1-Math.pow(1-k,3));place(pos);if(k<1)requestAnimationFrame(anim)})(t0);
+  const stopIntro=()=>{introStop=true};   // the moment the visitor touches or hovers the timeline, the intro sweep yields to them
+  const tlEl=document.querySelector(".timeline");
+  ["mousemove","mouseenter","touchstart","pointerdown","wheel"].forEach(ev=>tlEl.addEventListener(ev,stopIntro,{passive:true,capture:true}));
 }
 addEventListener("resize",()=>{placeRuler();place(pos)});
 placeRuler();
