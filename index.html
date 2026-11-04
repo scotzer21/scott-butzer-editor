@@ -496,7 +496,7 @@ function vimeoSrc(url){                       // vimeo.com/123 or vimeo.com/123/
   const m=String(url||"").match(/vimeo\.com\/(?:video\/)?(\d+)(?:\/([0-9a-f]+))?(?:.*[?&]h=([0-9a-f]+))?/i); if(!m) return "";
   // Phones and tablets block autoplay with sound inside embedded players, so there the viewer taps Vimeo's play button once and hears it
   const touch=matchMedia("(hover: none) and (pointer: coarse)").matches || /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
-  const h=m[2]||m[3]; return `https://player.vimeo.com/video/${m[1]}?${h?"h="+h+"&":""}${touch?"":"autoplay=1&"}title=0&byline=0&portrait=0&dnt=1&playsinline=1`;
+  const h=m[2]||m[3]; return `https://player.vimeo.com/video/${m[1]}?${h?"h="+h+"&":""}${touch?"":"autoplay=1&"}title=0&byline=0&portrait=0&badge=0&vimeo_logo=0&dnt=1&playsinline=1`;
 }
 let cur=0, opener=null;
 function openPlayer(i){
