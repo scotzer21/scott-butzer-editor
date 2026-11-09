@@ -6,6 +6,9 @@
 <meta name="description" content="Scott Butzer, editor: commercials, music videos and films for Apple, BMW, Porsche, Mercedes-Benz, Gatorade and more.">
 <title>Scott Butzer — Editor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://player.vimeo.com">
+<link rel="preconnect" href="https://f.vimeocdn.com">
+<link rel="preconnect" href="https://vod-adaptive-ak.vimeocdn.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <style>
@@ -198,7 +201,7 @@ footer{border-color:var(--line)}
 /* Sizzle: a muted, looping montage plays full-width behind the headline, under a dark wash */
 .hero-top{position:relative;display:grid;gap:28px;padding-block:56px 64px;isolation:isolate}
 .hero-bg{position:absolute;inset:0;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;overflow:hidden;background:#0b0b0b}
-.hero-bg iframe{position:absolute;top:50%;left:50%;border:0;pointer-events:none;opacity:0;transition:opacity 1.2s ease;
+.hero-bg iframe{position:absolute;top:50%;left:50%;border:0;pointer-events:none;opacity:0;transition:opacity .45s ease;
   width:max(100%, calc(var(--h,100%) * 16 / 9));height:max(100%, calc(100vw * 9 / 16));transform:translate(-50%,-50%)}
 .hero-bg iframe.on{opacity:1}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.35) 70%,rgba(0,0,0,.2)),linear-gradient(0deg,rgba(0,0,0,.35),transparent 40%)}
@@ -217,7 +220,7 @@ footer{border-color:var(--line)}
   </header>
 
   <div class="hero" id="top">
-    <div class="hero-top"><div class="hero-bg" id="hero-bg" aria-hidden="true"></div>
+    <div class="hero-top"><div class="hero-bg" id="hero-bg" aria-hidden="true"><iframe id="sizzle" src="https://player.vimeo.com/video/1245216514?h=9ac9b25d74&amp;background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;dnt=1" allow="autoplay; fullscreen" tabindex="-1" title=""></iframe></div>
     <h1>Crafted films,<br>cut right.<em>Launch films, spots, music videos, and docs for global consumption.</em></h1>
     <p class="lede">I cut commercial work for major brands, music videos, films, social content, and everything in between. Scrub through some of my selects below.</p>
     </div>
@@ -460,18 +463,20 @@ if(hoverScrub) tlBox.addEventListener("mousemove",e=>{ if(onScrollbar(e)) return
 })();
 
 // Sizzle: Scott's montage loops muted behind the headline (Vimeo background mode: no controls, no branding, plays inline on phones).
-// It fades in once it is actually playing, and pauses while a film is open or the tab is hidden.
-const SIZZLE={id:"1245216514",h:"9ac9b25d74"};
+// The player is in the page markup so it starts loading immediately; it fades up quickly on the first sign of playback,
+// and pauses while a film is open or the tab is hidden.
+const SIZZLE={id:"1245216514",h:"9ac9b25d74"};   // also in the hero markup
 (function(){
-  const box=document.getElementById("hero-bg"); if(!box || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const box=document.getElementById("hero-bg"), f=document.getElementById("sizzle"); if(!box||!f) return;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ f.remove(); return; }
   const fit=()=>box.style.setProperty("--h",box.offsetHeight+"px"); fit(); addEventListener("resize",fit);
-  const f=document.createElement("iframe"); f.allow="autoplay; fullscreen"; f.tabIndex=-1; f.title="";
-  f.src=`https://player.vimeo.com/video/${SIZZLE.id}?h=${SIZZLE.h}&background=1&autoplay=1&loop=1&muted=1&dnt=1`;
-  box.append(f);
   const send=o=>{ try{ f.contentWindow.postMessage(JSON.stringify(o),"https://player.vimeo.com") }catch(_){} };
+  const show=()=>f.classList.add("on");
   addEventListener("message",e=>{ if(e.source!==f.contentWindow) return; let d=e.data; try{ if(typeof d==="string") d=JSON.parse(d) }catch(_){ return }
-    if(d.event==="ready") send({method:"addEventListener",value:"playProgress"});
-    if(d.event==="playProgress") f.classList.add("on"); });
+    if(d.event==="ready"){ ["play","playProgress","timeupdate"].forEach(v=>send({method:"addEventListener",value:v})); send({method:"getPaused"}); }
+    if(d.event==="play"||d.event==="playProgress"||d.event==="timeupdate") show();
+    if(d.method==="getPaused" && d.value===false) show(); });
+  send({method:"getPaused"});   // in case the player was ready before this script ran
   const pl=document.getElementById("player");
   const sync=()=>send({method:(pl.hidden && !document.hidden)?"play":"pause"});
   new MutationObserver(sync).observe(pl,{attributes:true,attributeFilter:["hidden"]});
