@@ -174,7 +174,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 .hero-bg .bg-layer{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
 .hero-bg .bg-layer.on{opacity:1}
 .hero-bg iframe{position:absolute;top:50%;left:50%;border:0;pointer-events:none;
-  width:max(100%, calc(var(--h,100%) * 16 / 9));height:max(100%, calc(100vw * 9 / 16));transform:translate(-50%,-50%);filter:grayscale(1) contrast(1.05)}
+  width:max(100%, calc(var(--h,100%) * 16 / 9));height:max(100%, calc(100vw * 9 / 16));transform:translate(-50%,-50%) scale(1.34);filter:grayscale(1) contrast(1.05)}   /* zoom crops any letterbox or pillarbox bars */
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.35) 70%,rgba(0,0,0,.2)),linear-gradient(0deg,rgba(0,0,0,.35),transparent 40%)}
 .hero-top h1{color:#fff}
 .hero-top h1 em,.hero-top .lede{color:rgba(255,255,255,.82)}
@@ -445,6 +445,7 @@ if(hoverScrub) tlBox.addEventListener("mousemove",e=>{ if(onScrollbar(e)) return
   const fit=()=>box.style.setProperty("--h",box.offsetHeight+"px"); fit(); addEventListener("resize",fit);
   let idx=0, shown=null;
   function load(n){
+    if(!document.getElementById("player").hidden || document.hidden){ setTimeout(()=>load(n),1500); return; }   // hold while a film is open or the tab is in the background
     const it=list[n%list.length], layer=document.createElement("div"); layer.className="bg-layer";
     const f=document.createElement("iframe"); f.allow="autoplay"; f.tabIndex=-1; f.title="";
     f.src=`https://player.vimeo.com/video/${it.id}?${it.h?"h="+it.h+"&":""}background=1&muted=1&autoplay=1&loop=1&dnt=1&quality=540p#t=${it.t}s`;
@@ -460,7 +461,6 @@ if(hoverScrub) tlBox.addEventListener("mousemove",e=>{ if(onScrollbar(e)) return
       setTimeout(()=>{ removeEventListener("message",onMsg); },500);
       setTimeout(()=>{ idx++; load(idx); },HOLD); }
   }
-  // pause the reel while the film player is open or the tab is hidden, to save data
   load(0);
 })();
 let dock=null;   // set below; the touch scrubber drives it on phones and tablets
