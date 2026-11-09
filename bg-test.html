@@ -179,6 +179,12 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 .hero-top h1{color:#fff}
 .hero-top h1 em,.hero-top .lede{color:rgba(255,255,255,.82)}
 .hero-now{position:absolute;right:0;bottom:16px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+
+/* Black edition: same monochrome look, inverted - black page, white type */
+:root{--bg:#0b0b0b; --surface:#161616; --line:#2b2b2b; --fg:#f2f2f2; --muted:#a6a6a6; --accent:#f2f2f2; --accent-ink:#0b0b0b;
+  --c1:#9a9a9a; --c2:#6e6e6e; --c3:#8a8a8a; --c4:#5e5e5e; --c5:#7c7c7c; --c6:#b0b0b0; color-scheme:dark}
+.player{background:rgba(0,0,0,.96)}
+::selection{background:#f2f2f2;color:#0b0b0b}
 @media (prefers-reduced-motion:reduce){.hero-bg{display:none}.hero-top h1{color:var(--fg)}.hero-top h1 em,.hero-top .lede{color:var(--muted)}.hero-now{display:none}}
 </style>
 </head>
