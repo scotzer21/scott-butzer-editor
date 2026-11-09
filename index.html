@@ -475,13 +475,23 @@ const SIZZLE={id:"1245216514",h:"9ac9b25d74"};   // also in the hero markup
   const fit=()=>box.style.setProperty("--h",box.offsetHeight+"px"); fit(); addEventListener("resize",fit);
   const send=o=>{ try{ f.contentWindow.postMessage(JSON.stringify(o),"https://player.vimeo.com") }catch(_){} };
   const show=()=>f.classList.add("on");
+  // Loop watchdog: Vimeo's own loop sometimes sticks on the last frames after a while. If the picture stops advancing
+  // (or reaches the end) while it should be playing, jump back to the start and play.
+  let lastSec=-1, lastMove=Date.now();
+  const restart=()=>{ send({method:"setCurrentTime",value:0}); send({method:"play"}); lastMove=Date.now(); };
   addEventListener("message",e=>{ if(e.source!==f.contentWindow) return; let d=e.data; try{ if(typeof d==="string") d=JSON.parse(d) }catch(_){ return }
-    if(d.event==="ready"){ ["play","playProgress","timeupdate"].forEach(v=>send({method:"addEventListener",value:v})); send({method:"getPaused"}); }
+    if(d.event==="ready"){ ["play","playProgress","timeupdate","ended","finish"].forEach(v=>send({method:"addEventListener",value:v})); send({method:"getPaused"}); }
     if(d.event==="play"||d.event==="playProgress"||d.event==="timeupdate") show();
+    if((d.event==="playProgress"||d.event==="timeupdate") && d.data){ const sec=d.data.seconds, dur=d.data.duration;
+      if(sec!==lastSec){ lastSec=sec; lastMove=Date.now(); }
+      if(dur && sec>=dur-0.15) restart(); }
+    if(d.event==="ended"||d.event==="finish") restart();
     if(d.method==="getPaused" && d.value===false) show(); });
   send({method:"getPaused"});   // in case the player was ready before this script ran
   const pl=document.getElementById("player");
-  const sync=()=>send({method:(pl.hidden && !document.hidden)?"play":"pause"});
+  const shouldPlay=()=>pl.hidden && !document.hidden;
+  setInterval(()=>{ if(shouldPlay() && lastSec>=0 && Date.now()-lastMove>2500) restart(); },1000);
+  const sync=()=>{ lastMove=Date.now(); send({method:shouldPlay()?"play":"pause"}); };
   new MutationObserver(sync).observe(pl,{attributes:true,attributeFilter:["hidden"]});
   document.addEventListener("visibilitychange",sync);
 })();
