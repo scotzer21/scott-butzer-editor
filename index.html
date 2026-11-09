@@ -213,8 +213,8 @@ footer{border-color:var(--line)}
 .hero-top .lede{color:color-mix(in srgb,#e6e6e6 74%,var(--accent))}
 @media (prefers-reduced-motion:reduce){.hero-bg iframe{display:none}}
 /* Film grain over the sizzle: a fine monochrome noise texture that jitters a few times a second */
-.hero-bg .grain{position:absolute;inset:-60px;z-index:2;pointer-events:none;opacity:.22;mix-blend-mode:overlay;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/240px 240px;animation:grain .9s steps(1) infinite}
+.hero-bg .grain{position:absolute;inset:-60px;z-index:2;pointer-events:none;opacity:.18;mix-blend-mode:overlay;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 1.7 -.35 0 0 0 1.7 -.35 0 0 0 1.7 -.35 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/240px 240px;animation:grain .9s steps(1) infinite}
 @keyframes grain{0%{transform:translate(0,0)}12%{transform:translate(-23px,14px)}25%{transform:translate(17px,-31px)}37%{transform:translate(-38px,-9px)}
   50%{transform:translate(29px,22px)}62%{transform:translate(-11px,37px)}75%{transform:translate(41px,-17px)}87%{transform:translate(-30px,-36px)}100%{transform:translate(0,0)}}
 .hero-bg::after{z-index:1}
