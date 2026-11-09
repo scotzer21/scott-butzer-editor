@@ -212,6 +212,14 @@ footer{border-color:var(--line)}
 .hero-top h1 em{color:color-mix(in srgb,#fff 76%,var(--accent))}   /* white with a slight gold warmth */
 .hero-top .lede{color:color-mix(in srgb,#e6e6e6 74%,var(--accent))}
 @media (prefers-reduced-motion:reduce){.hero-bg iframe{display:none}}
+/* Film grain over the sizzle: a fine monochrome noise texture that jitters a few times a second */
+.hero-bg .grain{position:absolute;inset:-60px;z-index:2;pointer-events:none;opacity:.22;mix-blend-mode:overlay;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0/240px 240px;animation:grain .9s steps(1) infinite}
+@keyframes grain{0%{transform:translate(0,0)}12%{transform:translate(-23px,14px)}25%{transform:translate(17px,-31px)}37%{transform:translate(-38px,-9px)}
+  50%{transform:translate(29px,22px)}62%{transform:translate(-11px,37px)}75%{transform:translate(41px,-17px)}87%{transform:translate(-30px,-36px)}100%{transform:translate(0,0)}}
+.hero-bg::after{z-index:1}
+@media (prefers-reduced-motion:reduce){.hero-bg .grain{animation:none}}
+
 </style>
 </head>
 <body>
@@ -223,7 +231,7 @@ footer{border-color:var(--line)}
   </header>
 
   <div class="hero" id="top">
-    <div class="hero-top"><div class="hero-bg" id="hero-bg" aria-hidden="true"><iframe id="sizzle" src="https://player.vimeo.com/video/1245216514?h=9ac9b25d74&amp;background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;dnt=1" allow="autoplay; fullscreen" tabindex="-1" title=""></iframe></div>
+    <div class="hero-top"><div class="hero-bg" id="hero-bg" aria-hidden="true"><iframe id="sizzle" src="https://player.vimeo.com/video/1245216514?h=9ac9b25d74&amp;background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;dnt=1" allow="autoplay; fullscreen" tabindex="-1" title=""></iframe><div class="grain"></div></div>
     <h1>Crafted films,<br>cut right.<em>Launch films, commercials, music videos, and docs for global consumption.</em></h1>
     <p class="lede">Two decades of building high performing creative, and delivering breakthrough campaigns for the world’s most iconic brands. Scrub through some of my selects below.</p>
     </div>
