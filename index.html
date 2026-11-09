@@ -180,7 +180,7 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 }
 h1,h2,.brand{color:var(--accent)}
 h1 em{color:var(--fg)}
-.lede,.about p,.big-mail{color:var(--muted)}
+.lede,.about p,.big-mail{color:color-mix(in srgb,var(--muted) 82%,var(--accent))}   /* oatmeal with a slight gold warmth */
 .card h3{color:var(--fg)}
 nav a:hover{color:var(--accent)}
 .filters button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
@@ -206,8 +206,8 @@ footer{border-color:var(--line)}
 .hero-bg iframe.on{opacity:1}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.35) 70%,rgba(0,0,0,.2)),linear-gradient(0deg,rgba(0,0,0,.35),transparent 40%)}
 .hero-top h1{color:var(--accent)}
-.hero-top h1 em{color:#fff}
-.hero-top .lede{color:rgba(255,255,255,.85)}
+.hero-top h1 em{color:color-mix(in srgb,#fff 84%,var(--accent))}   /* white with a slight gold warmth */
+.hero-top .lede{color:color-mix(in srgb,#e6e6e6 82%,var(--accent))}
 @media (prefers-reduced-motion:reduce){.hero-bg iframe{display:none}}
 </style>
 </head>
