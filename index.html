@@ -301,7 +301,10 @@ const VIMEO={
   lilpump:"https://vimeo.com/1242987866/9e76a7210e", citygirls:"https://vimeo.com/1242988962/e133466de6", homewithyou:"https://vimeo.com/1242988029/114f810c54", fireoflove:"https://vimeo.com/1242988054/ebd1c43f65", haim:"https://vimeo.com/86925240", lykkeli:"https://vimeo.com/1242996064/6c850b890c", bushs:"https://vimeo.com/1069652658/4ca70124d1", jviewz:"https://vimeo.com/86927257", dodge:"https://vimeo.com/1069692438/2468ada9ee", google:"https://vimeo.com/1069658470/cfe6f2721a", jidvans:"https://vimeo.com/1243018271/1656dc33a7", pixel8:"https://vimeo.com/1243027923/d9aeb9ac79", walmart:"https://vimeo.com/1243029811/91a251d360", mbpro:"https://vimeo.com/1243030324/34277d702b", bohan:"https://vimeo.com/1243032901/25fe32a165", stumptown:"https://vimeo.com/1243032754/33b16c44dc", sonos:"https://vimeo.com/1243046277/f5417d8639", shinya:"https://vimeo.com/158765448", turbotax:"https://vimeo.com/1243048593/76c6e88dba", iphone:"https://vimeo.com/1069651811/ce64a11f42", xbox:"https://vimeo.com/1243048377/be8ee44e7f", eames:"https://vimeo.com/1243054409/28a1b13c87", honda:"https://vimeo.com/1243056174/0cc0394641", nasir:"https://vimeo.com/1243060659/8c6ed96939", takeoff:"https://vimeo.com/1243058599/828872f3a5", uber:"https://vimeo.com/1243060267/be799b02c4", airbnb:"https://vimeo.com/1243056675/a717f764df", mo:"https://vimeo.com/1243058878/b9d07412e1", fanta:"https://vimeo.com/1069693718/a36c858a11"
 };
 const name = w => [w.client, w.t].filter(Boolean).join(" — ");
-const still = w => /^https?:/.test(w.img||"") ? w.img : `media/${w.img||w.k}.jpg`;
+// Vimeo-hosted stills load straight from Vimeo on scottbutzer.com; anywhere else (the Claude copy, which can't reach Vimeo's image server)
+// they come from thumbs/, which a GitHub workflow keeps in step with these URLs.
+const OWN_SITE = /(^|\.)scottbutzer\.com$|github\.io$|^localhost$|^127\./.test(location.hostname);
+const still = w => /^https?:/.test(w.img||"") ? (OWN_SITE ? w.img : `thumbs/${w.k}.jpg`) : `media/${w.img||w.k}.jpg`;
 // Order and removals live in order.json: {"order":[keys...], "removed":[keys...]}. Keys not listed go at the end.
 async function savedOrder(){
   try{const ctl=new AbortController(), t=setTimeout(()=>ctl.abort(),1500);
