@@ -10,7 +10,7 @@
 <style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <style>
 /* Layout: the reel is a timeline. A V1 track of spots with a scrubbing playhead opens the page; the work list below reads like a bin. */
-/* Single black-and-white look: greys only, same in every viewer theme. */
+/* Base greys below; the black & gold edition at the end of this stylesheet overrides them. */
 :root{
   --bg:#ffffff; --surface:#f4f4f4; --line:#dcdcdc; --fg:#111111; --muted:#5e5e5e; --accent:#111111; --accent-ink:#ffffff;
   --c1:#1c1c1c; --c2:#4a4a4a; --c3:#2e2e2e; --c4:#5c5c5c; --c5:#262626; --c6:#424242;
@@ -167,6 +167,45 @@ h2{font-family:var(--display);font-stretch:62%;font-weight:800;text-transform:up
 footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:28px 40px;border-top:1px solid var(--line);color:var(--muted)}
 @media (max-width:560px){nav{gap:16px}.clip b{font-size:10px}.clip i{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== Black & gold edition (Nov 2026): black page, charcoal panels, gold type (#EE9A45, a deeper Burning Flame) ===== */
+:root{
+  --bg:#0D0D0D; --surface:#1A1A1A; --line:rgba(238,233,223,.16); --fg:#EEE9DF; --muted:#C9C1B1;
+  --accent:#EE9A45; --accent-ink:#0D0D0D; --rust:#A35139;
+  --c1:#A35139; --c2:#EE9A45; --c3:#8C4632; --c4:#E0914F; --c5:#B85E3F; --c6:#E08A3C;
+  color-scheme:dark;
+}
+h1,h2,.brand,.big-mail{color:var(--accent)}
+h1 em{color:var(--fg)}
+.lede,.about p{color:var(--muted)}
+.card h3{color:var(--fg)}
+nav a:hover{color:var(--accent)}
+.filters button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.filters button:hover{border-color:var(--accent);color:var(--fg)}
+.btn.ghost{color:var(--fg);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+.timeline{border-color:rgba(238,233,223,.10)}
+.still{background:var(--surface)}
+.player{background:rgba(5,5,5,.97)}
+.pl-frame,.pl-end{background:var(--surface)}
+.player .pl-end-btns button:hover,.player button:hover{border-color:var(--accent)}
+.player .pl-end-btns button:hover{background:var(--accent);color:var(--accent-ink)}
+.player-bar h3{color:var(--accent)}
+.play span{background:var(--accent);color:var(--accent-ink)}
+::selection{background:var(--accent);color:var(--accent-ink)}
+footer{border-color:var(--line)}
+
+/* Sizzle: a muted, looping montage plays full-width behind the headline, under a dark wash */
+.hero-top{position:relative;display:grid;gap:28px;padding-block:56px 64px;isolation:isolate}
+.hero-bg{position:absolute;inset:0;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;overflow:hidden;background:#0b0b0b}
+.hero-bg iframe{position:absolute;top:50%;left:50%;border:0;pointer-events:none;opacity:0;transition:opacity 1.2s ease;
+  width:max(100%, calc(var(--h,100%) * 16 / 9));height:max(100%, calc(100vw * 9 / 16));transform:translate(-50%,-50%)}
+.hero-bg iframe.on{opacity:1}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.35) 70%,rgba(0,0,0,.2)),linear-gradient(0deg,rgba(0,0,0,.35),transparent 40%)}
+.hero-top h1{color:var(--accent)}
+.hero-top h1 em{color:#fff}
+.hero-top .lede{color:rgba(255,255,255,.85)}
+@media (prefers-reduced-motion:reduce){.hero-bg iframe{display:none}}
 </style>
 </head>
 <body>
@@ -178,8 +217,10 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
   </header>
 
   <div class="hero" id="top">
+    <div class="hero-top"><div class="hero-bg" id="hero-bg" aria-hidden="true"></div>
     <h1>Crafted films,<br>cut right.<em>Launch films, spots, music videos, and docs for global consumption.</em></h1>
     <p class="lede">I cut commercial work for major brands, music videos, films, social content, and everything in between. Scrub through some of my selects below.</p>
+    </div>
 
     <div class="timeline" aria-label="Reel timeline">
       <div class="tl-head">
@@ -416,6 +457,25 @@ if(hoverScrub) tlBox.addEventListener("mousemove",e=>{ if(onScrollbar(e)) return
   document.addEventListener("touchcancel",up,{passive:true,capture:true});
   const clear=()=>{ fx=fy=null; set(null); };
   addEventListener("pageshow",clear); document.addEventListener("visibilitychange",clear);
+})();
+
+// Sizzle: Scott's montage loops muted behind the headline (Vimeo background mode: no controls, no branding, plays inline on phones).
+// It fades in once it is actually playing, and pauses while a film is open or the tab is hidden.
+const SIZZLE={id:"1245216514",h:"9ac9b25d74"};
+(function(){
+  const box=document.getElementById("hero-bg"); if(!box || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const fit=()=>box.style.setProperty("--h",box.offsetHeight+"px"); fit(); addEventListener("resize",fit);
+  const f=document.createElement("iframe"); f.allow="autoplay; fullscreen"; f.tabIndex=-1; f.title="";
+  f.src=`https://player.vimeo.com/video/${SIZZLE.id}?h=${SIZZLE.h}&background=1&autoplay=1&loop=1&muted=1&dnt=1`;
+  box.append(f);
+  const send=o=>{ try{ f.contentWindow.postMessage(JSON.stringify(o),"https://player.vimeo.com") }catch(_){} };
+  addEventListener("message",e=>{ if(e.source!==f.contentWindow) return; let d=e.data; try{ if(typeof d==="string") d=JSON.parse(d) }catch(_){ return }
+    if(d.event==="ready") send({method:"addEventListener",value:"playProgress"});
+    if(d.event==="playProgress") f.classList.add("on"); });
+  const pl=document.getElementById("player");
+  const sync=()=>send({method:(pl.hidden && !document.hidden)?"play":"pause"});
+  new MutationObserver(sync).observe(pl,{attributes:true,attributeFilter:["hidden"]});
+  document.addEventListener("visibilitychange",sync);
 })();
 let dock=null;   // set below; the touch scrubber drives it on phones and tablets
 // Dock-style magnification: clips near the cursor get taller AND wider, pushing their neighbours aside.
