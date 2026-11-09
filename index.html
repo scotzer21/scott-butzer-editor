@@ -197,9 +197,9 @@ nav a:hover{color:var(--accent)}
 .play span{background:var(--accent);color:var(--accent-ink)}
 ::selection{background:var(--accent);color:var(--accent-ink)}
 footer{border-color:var(--line)}
-/* A1: clean gold bars (a soft top highlight), alternating two strengths so the cuts read - no muddy browns */
-.track.a .clip{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 86%,#fff),var(--accent));border:0;opacity:.85}
-.track.a .clip:nth-child(even){opacity:.6}
+/* A1: gold bars alternating with black, gold-outlined bars so the cuts read - no muddy browns */
+.track.a .clip{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 86%,#fff),var(--accent));border:0;opacity:.9}
+.track.a .clip:nth-child(even){background:#000;box-shadow:inset 0 0 0 1px var(--accent);opacity:1}   /* every other bar: black with a gold outline */
 
 /* Sizzle: a muted, looping montage plays full-width behind the headline, under a dark wash */
 .hero-top{position:relative;display:grid;gap:28px;padding-block:56px 64px;isolation:isolate}
