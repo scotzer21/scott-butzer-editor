@@ -588,6 +588,9 @@ let dock=null;   // set below; the touch scrubber drives it on phones and tablet
   const seen=new Set(), box=document.getElementById("clients");
   work.forEach(w=>{ const c = (w.k in CLIENT_OF) ? CLIENT_OF[w.k] : w.client; if(!c||seen.has(c)) return; seen.add(c);
     const sp=document.createElement("span"); sp.textContent=c; box.append(sp); });
+  // Other brands Scott has cut for, not (yet) on the site - listed after the ones above; duplicates are skipped
+  const MORE=["Microsoft","Converse","Samsung","Adidas","Comcast","TikTok","Honda","Weber","Wrigley's","Taco Bell","Cadillac","Disney","GoPro","Adobe","United","Franzia","NBA 2K","U.S. Bank","Capital One"];
+  MORE.forEach(c=>{ if(seen.has(c)) return; seen.add(c); const sp=document.createElement("span"); sp.textContent=c; box.append(sp); });
 }
 
 // Work grid
