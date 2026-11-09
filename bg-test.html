@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Scott Butzer, editor: commercials, music videos and films for Apple, BMW, Porsche, Mercedes-Benz, Gatorade and more.">
+<title>Scott Butzer — Editor (Background test)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>
+/* Layout: the reel is a timeline. A V1 track of spots with a scrubbing playhead opens the page; the work list below reads like a bin. */
+/* Single black-and-white look: greys only, same in every viewer theme. */
+:root{
+  --bg:#ffffff; --surface:#f4f4f4; --line:#dcdcdc; --fg:#111111; --muted:#5e5e5e; --accent:#111111; --accent-ink:#ffffff;
+  --c1:#1c1c1c; --c2:#4a4a4a; --c3:#2e2e2e; --c4:#5c5c5c; --c5:#262626; --c6:#424242;
+  --display:"Archivo",Helvetica,Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1120px;margin:0 auto}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* Header */
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:24px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-stretch:125%;font-weight:700;font-size:15px;letter-spacing:.02em;text-decoration:none}
+nav{display:flex;gap:24px}
+nav a{text-decoration:none;color:var(--muted);font-size:14px}
+nav a:hover{color:var(--fg)}
+
+/* Hero */
+.hero{padding-block:48px 32px;display:grid;gap:28px}
+h1{font-family:var(--display);font-stretch:62%;font-weight:800;font-size:clamp(56px,11vw,148px);line-height:.86;margin:0;letter-spacing:-.01em;text-transform:uppercase;text-wrap:balance}
+h1 em{font-style:normal;font-stretch:125%;font-weight:400;font-size:.38em;display:block;letter-spacing:.01em;text-transform:none;color:var(--muted);line-height:1.2;margin-top:.5em}
+.lede{max-width:56ch;color:var(--muted);margin:0;font-size:17px}
+
+/* Timeline */
+.timeline{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:14px 14px 18px;margin-top:8px}
+.tl-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.tc-big{font-family:var(--mono);font-size:22px;font-variant-numeric:tabular-nums;color:var(--accent);letter-spacing:.03em}
+.ruler{position:relative;height:18px;border-bottom:1px solid var(--line);margin-left:34px}
+.ruler span{position:absolute;bottom:2px;font-family:var(--mono);font-size:9px;color:var(--muted);transform:translateX(-50%)}
+.ruler span::after{content:"";position:absolute;left:50%;top:13px;height:5px;width:1px;background:var(--line)}
+.track{display:flex;align-items:stretch;gap:0;margin-top:8px}
+.track-id{width:34px;flex:none;font-family:var(--mono);font-size:10px;color:var(--muted);display:flex;align-items:center}
+.clips{position:relative;display:flex;flex:1;min-width:0;height:72px;gap:2px}
+.clip{flex-grow:var(--d);flex-basis:calc(var(--x,0) * 1px);min-width:0;background:var(--clr);border-radius:2px;color:#fff;text-decoration:none;cursor:pointer;font:inherit;text-align:left;position:relative;
+  padding:6px 7px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;
+  transition:filter .15s, transform .15s;border:1px solid rgba(255,255,255,.14)}
+.clip:hover,.clip.hot{filter:brightness(1.25);transform:translateY(-2px)}
+/* V1 clips keep their slot in the timeline; the .face inside grows like a dock icon, re-cropping the still instead of stretching it */
+#v1 .clip{background:transparent;border:0;padding:0;overflow:visible;filter:grayscale(1);transition:filter .3s}
+#v1 .clip:hover{transform:none}
+#v1 .clip.hot{filter:grayscale(1) brightness(1.3);transform:none}
+#v1 .face{position:absolute;bottom:0;left:0;right:0;height:calc(100% * var(--s,1));
+  transform:translateY(calc(var(--lift,0) * -1px));
+  background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.65)),var(--img) center/cover,var(--clr);
+  border:1px solid rgba(255,255,255,.14);border-radius:2px;padding:6px 7px;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:0 calc(var(--k,0) * 10px) calc(var(--k,0) * 22px) rgba(0,0,0,calc(var(--k,0) * .35))}
+#v1 .clip b,#v1 .clip i{text-shadow:0 1px 3px rgba(0,0,0,.6)}
+#v1 .clip b{font-size:calc(12px + var(--k,0) * 3px)}
+#v1 .clip.lit,#v1 .clip:focus-visible{filter:grayscale(0)}
+@media (hover:none){#v1 .clip{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+  .timeline{touch-action:pan-y;-webkit-user-select:none;user-select:none}
+  .ruler{height:30px}.ruler span::after{top:25px}
+  .track.a #a1{height:28px}}
+@media (hover:none){#v1 .clip:active{filter:grayscale(0)}}
+@media (prefers-reduced-motion:reduce){#v1 .clip:hover{filter:grayscale(0)}}
+.clip b{font-family:var(--display);font-stretch:85%;font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
+.clip i{font-family:var(--mono);font-size:10px;font-style:normal;opacity:.8}
+.track.a .clips{height:16px}
+.track.a .clip{background:color-mix(in srgb,var(--clr) 45%,var(--surface));padding:0;border-color:transparent}
+.playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--accent);left:0;pointer-events:none;z-index:40}
+@media (hover:hover){.playhead{top:-20px}.tl-head{margin-bottom:32px}}   /* desktop: stand taller than fully magnified clips */
+.playhead::before{content:"";position:absolute;top:0;left:-5px;border:6px solid transparent;border-top:8px solid var(--accent)}
+.tl-scroll{overflow-x:auto;overflow-y:hidden;padding-top:44px;margin-top:-44px;padding-bottom:10px;margin-bottom:-10px;scrollbar-width:thin;scrollbar-color:var(--muted) transparent}
+.tl-scroll::-webkit-scrollbar{height:8px}
+.tl-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.tl-scroll:hover::-webkit-scrollbar-thumb{background:var(--muted)}
+.tl-body{position:relative;min-width:100%}
+.track-id{position:sticky;left:0;z-index:50;background:var(--surface)}
+/* the sticky V1/A1 gutter is one solid column: it covers the gaps between tracks and the space magnified clips grow into, so nothing peeks out from behind it */
+.track-id::after{content:"";position:absolute;left:0;right:0;top:-9px;bottom:-9px;background:var(--surface);z-index:-1}
+.track:not(.a) .track-id::after{top:-80px}
+.tl-head{position:relative;z-index:60}   /* reel name and timecode always sit above the V1/A1 gutter */
+.track.a .track-id::after{bottom:-14px}
+
+/* Work */
+section{padding-block:56px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:24px;border-top:1px solid var(--line);padding-top:20px}
+h2{font-family:var(--display);font-stretch:62%;font-weight:800;text-transform:uppercase;font-size:clamp(36px,6vw,64px);line-height:.9;margin:0}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filters button{font:500 12px var(--mono);letter-spacing:.06em;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:6px 12px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px 20px}
+@media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+.card{text-decoration:none;display:flex;flex-direction:column;gap:10px;min-width:0;background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.still{position:relative;aspect-ratio:16/9;max-width:100%;border-radius:2px;overflow:hidden;background:#000}
+.still .frame{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:transform .5s}
+.still .frame{transition:transform .5s, filter .4s}
+.card.touch .frame{transition:transform .3s, filter .12s;transform:scale(1.04);filter:grayscale(0) contrast(1)}
+.still .burn{position:absolute;left:8px;bottom:6px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.85);text-shadow:0 1px 2px #000;z-index:1}
+.still .ar{position:absolute;right:8px;top:6px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.75);z-index:1}
+.still .play{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .2s;z-index:1}
+.card.touch .play{opacity:1}
+@media (hover:hover){.card:hover .frame,.card:focus-visible .frame{transform:scale(1.04);filter:grayscale(0) contrast(1)}.card:hover .play,.card:focus-visible .play{opacity:1}}   /* touch screens use .touch instead, so a tapped card doesn't stay stuck in colour */
+.play span{background:var(--accent);color:var(--accent-ink);font:500 11px var(--mono);letter-spacing:.1em;padding:7px 12px;border-radius:2px}
+.card h3{font-family:var(--display);font-stretch:100%;font-weight:600;font-size:19px;margin:0;line-height:1.25}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:13px;color:var(--muted);margin:0}
+.meta dt{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding-top:3px}
+.meta dd{margin:0;min-width:0}
+.player{position:fixed;inset:0;z-index:1000;background:rgba(10,10,10,.94);display:grid;place-items:center;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.player[hidden]{display:none}
+.player{overflow-y:auto;overscroll-behavior:contain}
+/* the video is sized to the screen's height as well as its width, so the title bar and Prev / Next / Close always fit below it */
+.player-in{width:min(1200px,100%,calc((100vh - 140px)*16/9));display:grid;gap:12px}
+@supports (height:100dvh){.player-in{width:min(1200px,100%,calc((100dvh - 140px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))*16/9))}}
+.pl-frame{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;background:#000}
+.pl-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.pl-end{position:absolute;inset:0;overflow:hidden;background:#000}
+.pl-end-bg{position:absolute;inset:-20px;background:center/cover no-repeat;filter:grayscale(1) blur(6px) brightness(.45)}
+.pl-end-in{position:relative;height:100%;display:grid;place-content:center;justify-items:center;gap:18px;padding:16px;text-align:center}
+.pl-end-label{font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#bdbdbd}
+.pl-end-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.player .pl-end-btns button{font:500 13px var(--mono);padding:10px 16px;background:rgba(0,0,0,.35);border-color:#888;max-width:100%}
+.player .pl-end-btns button:hover{background:#f2f2f2;color:#111;border-color:#f2f2f2}
+.pl-soon{position:absolute;inset:0;display:grid;place-items:center;margin:0;color:#a8a8a8;font:500 13px var(--mono);letter-spacing:.06em}
+.player-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#f2f2f2;flex-wrap:wrap}
+.player-bar h3{font-family:var(--display);font-weight:600;font-size:18px;margin:0}
+.player-bar .mono{color:#a8a8a8}
+.player-btns{display:flex;gap:8px}
+.player button{font:500 12px var(--mono);letter-spacing:.06em;background:transparent;color:#f2f2f2;border:1px solid #555;border-radius:2px;padding:8px 12px;cursor:pointer}
+.player button:hover{border-color:#f2f2f2}
+.card-top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+
+.grid-empty{margin:0;padding-block:48px;border:1px dashed var(--line);border-radius:2px;text-align:center;color:var(--muted);font-family:var(--mono);font-size:13px;letter-spacing:.04em}
+
+/* About */
+.about{display:grid;grid-template-columns:1.3fr 1fr;gap:48px}
+@media (max-width:800px){.about{grid-template-columns:1fr}}
+.about p{max-width:62ch;margin:0 0 1em}
+.portrait{margin:0;align-self:start}
+.portrait img{display:block;width:100%;max-width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:2px}
+.specs div{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding:10px 0;font-size:14px}
+.specs dt{color:var(--muted)}
+.specs dd{margin:0;text-align:right}
+.clients{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:8px}
+.clients span{font-family:var(--display);font-stretch:125%;font-weight:500;font-size:15px;color:var(--muted)}
+
+/* Contact */
+.contact{display:grid;gap:20px}
+.big-mail{font-family:var(--display);font-stretch:62%;font-weight:800;text-transform:uppercase;font-size:clamp(22px,3.6vw,40px);line-height:1.05;word-break:break-word;margin:0;user-select:all}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font:500 13px var(--mono);letter-spacing:.06em;padding:10px 16px;border-radius:2px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--fg);border-color:var(--line)}
+footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:28px 40px;border-top:1px solid var(--line);color:var(--muted)}
+@media (max-width:560px){nav{gap:16px}.clip b{font-size:10px}.clip i{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ===== Background reel (test): short muted moments from the spots play behind the headline, in black and white ===== */
+.hero-top{position:relative;display:grid;gap:28px;padding-block:56px 64px;isolation:isolate}
+.hero-bg{position:absolute;inset:0;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;overflow:hidden;background:#0b0b0b}
+.hero-bg .bg-layer{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
+.hero-bg .bg-layer.on{opacity:1}
+.hero-bg iframe{position:absolute;top:50%;left:50%;border:0;pointer-events:none;
+  width:max(100%, calc(var(--h,100%) * 16 / 9));height:max(100%, calc(100vw * 9 / 16));transform:translate(-50%,-50%);filter:grayscale(1) contrast(1.05)}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.35) 70%,rgba(0,0,0,.2)),linear-gradient(0deg,rgba(0,0,0,.35),transparent 40%)}
+.hero-top h1{color:#fff}
+.hero-top h1 em,.hero-top .lede{color:rgba(255,255,255,.82)}
+.hero-now{position:absolute;right:0;bottom:16px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+@media (prefers-reduced-motion:reduce){.hero-bg{display:none}.hero-top h1{color:var(--fg)}.hero-top h1 em,.hero-top .lede{color:var(--muted)}.hero-now{display:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <a class="brand" href="#top">SCOTT BUTZER — EDITOR</a>
+    <nav aria-label="Sections"><a href="#work">Work</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
+  </header>
+
+  <div class="hero" id="top">
+    <div class="hero-top"><div class="hero-bg" id="hero-bg" aria-hidden="true"></div>
+    <h1>Crafted films,<br>cut right.<em>Launch films, spots, music videos, and docs for global consumption.</em></h1>
+    <p class="lede">I cut commercial work for major brands, music videos, films, social content, and everything in between. Scrub through some of my selects below.</p>
+    <span class="hero-now" id="hero-now" aria-hidden="true"></span></div>
+
+    <div class="timeline" aria-label="Reel timeline">
+      <div class="tl-head">
+        <span class="label" id="reel-label">Selects_Reel_2026 · scroll →</span>
+        <span class="tc-big" id="tc">00:00:00:00</span>
+      </div>
+      <div class="tl-scroll" id="tl-scroll">
+      <div class="tl-body" id="tl-body">
+        <div class="ruler" id="ruler"></div>
+        <div class="track"><span class="track-id">V1</span><div class="clips" id="v1"></div></div>
+        <div class="track a"><span class="track-id">A1</span><div class="clips" id="a1"></div></div>
+        <div class="playhead" id="ph" aria-hidden="true"></div>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="work">
+    <div class="sec-head">
+      <h2>Selected work</h2>
+      <div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="about">
+    <div class="sec-head"><h2>About</h2><span class="label">18 years in the bay</span></div>
+    <div class="about">
+      <div>
+        <p>Scott Butzer is an award-winning editor with a career spanning over 18 years in platforms ranging from commercials, music videos, documentaries, and more. Scott is known for his unique ability to work in a wide variety of genres ranging from visual storytelling, to comedy, to automotive, as well as many others.</p>
+        <p>Scott’s work has been honored throughout the industry, receiving AICP awards for the Vince Staples’ <em>Fun!</em> music video and Frito-Lay’s <em>Taste of Soccer</em>. Scott’s work for Google’s 2020 <em>Year in Search</em> was awarded multiple Webby Awards among others and has amassed over 250 million views worldwide.</p>
+        <p>Before going freelance, Scott worked out of Los Angeles at Whitehouse Post, Final Cut, and Cabin Editing Company. Butzer has worked with ad agencies and directors, including Wieden + Kennedy; Goodby, Silverstein &amp; Partners; Apple; We Are From LA, Marcus Söderlund, and Jonathan Krisel.</p>
+        <!-- Clients list: parked for now. Delete the word "hidden" on the next line to bring it back (it still builds itself from the work). -->
+        <div id="clients-wrap" hidden><span class="label" style="display:block;margin-top:28px">Clients</span>
+        <div class="clients" id="clients"></div></div>
+      </div>
+      <figure class="portrait"><img src="media/scott.jpg" alt="Scott Butzer in front of a mountain in Colorado" width="1000" height="1000"></figure>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="sec-head"><h2>Contact</h2></div>
+    <div class="contact">
+      <p class="big-mail" id="mail">scott.butzer@gmail.com</p>
+      <div class="row">
+        <button class="btn" id="copy" type="button">Copy email</button>
+        <a class="btn ghost" href="https://www.linkedin.com/in/scott-butzer-256b4213" target="_blank" rel="noopener">LinkedIn</a>
+        <span class="mono" id="copied" role="status" style="color:var(--muted)"></span>
+      </div>
+    </div>
+  </section>
+
+  <footer><span class="mono">© 2026 Scott Butzer</span><span class="mono" id="outpoint"></span></footer>
+
+<div class="player" id="player" hidden role="dialog" aria-modal="true" aria-labelledby="pl-title">
+  <div class="player-in">
+    <div class="pl-frame" id="pl-frame"><iframe id="pl-iframe" title="Video player" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen hidden></iframe><div class="pl-end" id="pl-end" hidden><div class="pl-end-bg" id="pl-end-bg"></div><div class="pl-end-in"><span class="pl-end-label">End of piece</span><div class="pl-end-btns"><button type="button" id="pl-replay">↺ Replay</button><button type="button" id="pl-upnext">Next ▶ <span id="pl-upnext-name"></span></button></div></div></div><p class="pl-soon" id="pl-soon" hidden>Video coming soon.</p></div>
+    <div class="player-bar"><div><h3 id="pl-title"></h3><span class="mono" id="pl-meta"></span></div>
+      <div class="player-btns"><button type="button" id="pl-prev">◀ Prev</button><button type="button" id="pl-next">Next ▶</button><button type="button" id="pl-close">Close ✕</button></div></div>
+  </div>
+</div>
+</div>
+
+<script>
+(async()=>{
+const FPS = 24;
+const work = [
+  {k:"apple",       client:"Apple",          t:"MacBook Air 15″",            len:137.8, fps:"29.97", cat:"Commercial"},
+  {k:"bmw",         client:"BMW",            t:"8 Series: Unexplainable",    len:46.0,  fps:"23.976",cat:"Commercial"},
+  {k:"mini",        client:"MINI",           t:"The First All-Electric MINI", len:80.4,  fps:"25",    cat:"Commercial"},
+  {k:"mercedes",    client:"Mercedes-Benz",  t:"Justify Nothing",   len:133.6, fps:"25",    cat:"Commercial", note:"Director's cut"},
+  {k:"camry",       client:"Toyota",         t:"Camry: Limitless Vibes",     len:30.0,  fps:"23.976",cat:"Commercial"},
+  {k:"fritolay",    client:"Frito-Lay",      t:"A Taste of Soccer",          len:72.7,  fps:"23.976",cat:"Commercial"},
+  {k:"porsche",     client:"Porsche",        t:"Hoover Dam",                 len:76.0,  fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221409373-c55b26083ad7008db6ab9b2ee54662749dea0795ac4b11074311206389e13d27-d_1280?region=us"},
+  {k:"tecovas",     client:"Tecovas",        t:"How She Rolls",              len:60.1,  fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221410965-58de9b89b2a1e6972fc1752cb11b81b2e1faedbc90ff058ec3b3284dcf2185f1-d_1280?region=us"},
+  {k:"nissan",      client:"Nissan",         t:"What About Today",           len:30.0,  fps:"23.976",cat:"Commercial", img:"nissan-2"},
+  {k:"saintarcher", client:"Saint Archer",   t:"Saint Archer Gold",          len:75.1,  fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221401723-6c6a9f8a3c0024a0c1548ee54bfbf10589818b848faf7f383d4ac08cbe304875-d_1280?region=us"},
+  {k:"infiniti",    client:"INFINITI",       t:"QX50: Liam's Seat",          len:45.0,  fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221407590-59322c36458b1cfba6a0060f80685c2fc8ad5bf04e3e3463c48d755c267d007f-d_1280?region=us"},
+  {k:"gatorade",    client:"Gatorade",       t:"Every Day Is Your Day",      len:151.9, fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221406278-66cc6aacee1597a57c3e1bbde40833367e1cc7679ec96e6c882f9d95bafe74ba-d_1280x532?region=us"},
+  {k:"prius",       client:"Toyota",         t:"Prius: Black Sheep",         len:30.0,  fps:"23.976",cat:"Commercial", img:"prius-2"},
+  {k:"rimowa",      client:"RIMOWA",         t:"Anthem",                     len:60.0,  fps:"25",    cat:"Commercial", img:"https://i.vimeocdn.com/video/2221400031-2b3168086fa05dfc39fed4b1f5c0fce03648297cc3b400337211b0b69128c6de-d_1280?region=us"},
+  {k:"lexus",       client:"Lexus",          t:"Lexus IS",                   len:30.0,  fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221404001-f0fc78b01f1b4016f92d501e1a420ad27b34c8d400ac9f29b1f30ec18aba77f7-d_1280x564?region=us"},
+  {k:"ytmusic",     client:"YouTube Music",  t:"Anthem",                     len:124.4, fps:"23.976",cat:"Commercial", note:"Director's cut", img:"ytmusic-2"},
+  {k:"vincestaples",client:"Vince Staples",  t:"FUN!",                       len:138.3, fps:"23.976",cat:"Music Video", img:"https://i.vimeocdn.com/video/2221401190-a5ea5cfebb82959fc827d0d3e9277c305b31e74abcc198184eead1d3a1926940-d_1280?region=us"},
+  {k:"dodge",       client:"Dodge",          t:"Family Motto",               len:60,    fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221418651-9cd54f003353e4bf606fe53b98aabaee1cf5976cf71dd120eed082cb248ed9a3-d_1280?region=us"},
+  {k:"google",      client:"Google",         t:"Year in Search 2020",        len:180,   fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221422864-328ea25bfdbc228769046ffb0d4eb1844adfc1aab622a79c8107d35b8c330628-d_1280?region=us"},
+  {k:"pixel8",      client:"Google",         t:"Pixel 8",                    len:60,    fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221438234-7e0a0bc9693c11b60e21c0079a55644a959717e7c4417454aeb92d959163c99b-d_1280?region=us"},
+  {k:"walmart",     client:"Walmart",        t:"",                           len:60,    fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221441307-b6ebdc3c12efa3d898515704e6b7e6b5fe3954b7585520ca312028585da4d0f9-d_1030x720?region=us"},
+  {k:"mbpro",       client:"Apple",          t:"MacBook Pro",                len:90,    fps:"29.97",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221441946-a196b92ec977bbf5122cd2e50d605716f0c9821e8230defad4a1133e2883530e-d_1280?region=us"},
+  {k:"turbotax",    client:"TurboTax",       t:"All People Are Tax People",  len:60,    fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221465382-75105f42fd01c7bad0bf78d182700d92e4f8cb54dacca75ae03c67cd63cb4fe9-d_1280?region=us"},
+  {k:"iphone",      client:"Apple",          t:"iPhone 11 Pro",              len:60,    fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221395291-c8f76f69c178f6acbbc6a1b6367a92114aa720d19eb018bd4ef60c9cd398060b-d_1280?region=us"},
+  {k:"xbox",        client:"Xbox",           t:"Launch",                     len:60,    fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221471032-d53b0c2d4da82b8e03bbd49c11feac8f0a954b7306300380e3819bec567b9a49-d_1280?region=us"},
+  {k:"nasir",       client:"Nas",            t:"Nasir The Film",             len:965,   fps:"23.976",cat:"Film", img:"https://i.vimeocdn.com/video/2221915419-42f28e073431590d023fdf84236291d1b8a1a3938555c09ec7cab18d295c2580-d_1280x480?region=us"},
+  {k:"uber",        client:"Uber",           t:"No Mask No Ride",            len:60,    fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221922464-db09e87358ed4d4b41874f3550bcb3d72ca7846266e1d8771437ee33914caa63-d_1280?region=us"},
+  {k:"airbnb",      client:"Airbnb",         t:"How Was Your Holiday?",      len:45,    fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221923950-fdb83a72df2c626613bce2fbfa4bbb4a8e816a1f7a9faaa50b21682b5f2de3c2-d_1280?region=us"},
+  {k:"fanta",       client:"Fanta",          t:"Orange",                     len:30,    fps:"23.976",cat:"Commercial", img:"https://i.vimeocdn.com/video/2221935572-edd962cf06a4d1ed5cfc1308bce5cee224deda1f32cbece4169fd957d116a208-d_1280?region=us"},
+  {k:"lilpump",     client:"Lil Pump",       t:"Drug Addicts",               len:180.3, fps:"23.976",cat:"Music Video", img:"https://i.vimeocdn.com/video/2221396372-502ad0ddaabafebbebd880fe87761aefced23f12c63ca83a090df8fcc5c83b1d-d_1280x544?region=us"},
+  {k:"honda",       client:"Honda",          t:"Generations",                len:109,   fps:"23.976",cat:"Film", img:"https://i.vimeocdn.com/video/2221475492-b790ca27fe1e3ee0a5f53dccaaaaf94bfb3ac514359ecaf036b108cf5def8cb8-d_1280?region=us"},
+  {k:"citygirls",   client:"City Girls",     t:"Twerk ft. Cardi B",          len:230.4, fps:"23.976",cat:"Music Video", img:"https://i.vimeocdn.com/video/2221399028-ac786a6863f737cdcb0af66808a424c2d593756d772d97573b5e841f81c6603a-d_1280?region=us"},
+  {k:"homewithyou", client:"Madison Beer",   t:"Home With You",              len:202.3, fps:"23.976",cat:"Music Video", img:"https://i.vimeocdn.com/video/2221398515-6c6d3ddfd699a56b5e7f77084eba486e037e280a6dc00de66ed5c85fb4450465-d_1110x720?region=us"},
+  {k:"takeoff",     client:"Takeoff",        t:"Last Memory",                len:170,   fps:"23.976",cat:"Music Video", img:"https://i.vimeocdn.com/video/2221921087-71bd96dabc59299562379b0e049b2c9c8fe43fb34bdee71fdf76146de4b9797b-d_1280x476?region=us"},
+  {k:"fireoflove",  client:"Jesse Jo Stark", t:"Fire of Love",               len:243.9, fps:"23.976",cat:"Music Video", img:"https://i.vimeocdn.com/video/2221400950-69819493faf3c8d0aea26756bb24f9b20a7d586533ee1822fa7eac4569163e68-d_960x720?region=us"},
+  {k:"lykkeli",     client:"Lykke Li",       t:"Hard Rain",                  len:278,   fps:"23.976",cat:"Music Video", img:"https://i.vimeocdn.com/video/2221402863-3f978973baa2e5fe81ff5a83cd834f7b583290cedb54ce9a27fd19f1fc17967e-d_1280x596?region=us"},
+  {k:"bushs",       client:"Bush's Beans",   t:"Bean Song",                  len:185,   fps:"23.976",cat:"Music Video", img:"https://i.vimeocdn.com/video/1998021010-8c6badf704a52ac84c5a7c8f76f6fb0b21210926594a1a7b126c19e4c6a49824-d_1280x640?region=us"},
+  {k:"haim",        client:"Haim",           t:"Red Bull Sound & Vision",    len:747,   fps:"23.976",cat:"Film", img:"https://i.vimeocdn.com/video/464815484-99732c4afe1120ad57b79c6dd23bfcec62203671fcc2715919da498f1d53f6b6-d_1280?region=us"},
+  {k:"eames",       client:"Eames",          t:"Legacy (Trailer)",           len:143,   fps:"23.976",cat:"Film", img:"https://i.vimeocdn.com/video/2221473001-3280a4825beb3fedc7edc8c09c299aa0b2fb25a8f6d31917f1b491a9516eb268-d_1280x480?region=us"},
+  {k:"jviewz",      client:"j.viewz",        t:"Motorola Short Documentary", len:282,   fps:"23.976",cat:"Film", img:"https://i.vimeocdn.com/video/464811470-0e7273cdd01b61d218381e2561b597872ea1802ac0e0816fabcd768856f2839b-d_1280?region=us"},
+  {k:"mo",          client:"MØ",             t:"Sun In Our Eyes",            len:237,   fps:"23.976",cat:"Music Video", img:"https://i.vimeocdn.com/video/2221930960-8079f0bcdfbb77344947ab3a9c214e8a598edc61ed1cb8f4382ca8e530d85290-d_944x720?region=us"},
+  {k:"sonos",       client:"Sonos",          t:"Bell",                       len:122,   fps:"23.976",cat:"Film", img:"https://i.vimeocdn.com/video/2221462826-7a1ab067594738d87bb846234e2a70c6750ac0fd4ddc398726e49cd26ffd3efc-d_1280?region=us"},
+  {k:"shinya",      client:"Shinya Kimura",  t:"Short Film",                 len:178,   fps:"23.976",cat:"Film", img:"https://i.vimeocdn.com/video/2221464698-b236a5bf712b90d9b6626e9c8ddae59cbbcf1e6f52b913b5ef7a7308a28dab54-d_1280?region=us"},
+  {k:"stumptown",   client:"Stumptown",      t:"Wax & Gold",                 len:1648,  fps:"23.976",cat:"Film", img:"https://i.vimeocdn.com/video/2221458870-accb7235fdd5f2a6716b9a340a35863b30237204b4cd24dbbaced962dd2eb2da-d_1280?region=us"},
+  {k:"jidvans",     client:"JID",            t:"Vans",                       len:494,   fps:"23.976",cat:"Film", img:"https://i.vimeocdn.com/video/2221437615-c5a178b42817285e1e088119d9812532c4281f9a489ad71f7a4bf8a04e2bcb50-d_1280?region=us"},
+  {k:"bohan",       client:"Bohan Phoenix",  t:"Vans",                       len:226,   fps:"23.976",cat:"Film", img:"https://i.vimeocdn.com/video/2221449443-53e3da83b3f8626acf6f5dcb3645f6dcfbd1007781f37af6f683a3b4bb65ba66-d_1280?region=us"}
+];
+// Vimeo link for each piece (paste the video's vimeo.com URL; unlisted links with a hash work too)
+const VIMEO={
+  apple:"https://vimeo.com/1069656324/327e993610", mini:"https://vimeo.com/1069660301/7bda555c78", bmw:"https://vimeo.com/1069687192/3eeed6aa7c", mercedes:"https://vimeo.com/1069649743/64eb1cff80", vincestaples:"https://vimeo.com/1242983852/b7008d978b", fritolay:"https://vimeo.com/1069657615/0aa494d577", porsche:"https://vimeo.com/1069688828/b964c74796", tecovas:"https://vimeo.com/1069662700/1a354f5b3b", nissan:"https://vimeo.com/1069686793/5f1735d519",
+  saintarcher:"https://vimeo.com/1069654853/c23003f6bb", infiniti:"https://vimeo.com/1069688264/b620e8ca4a", gatorade:"https://vimeo.com/1069661170/f936e5ced8", prius:"https://vimeo.com/1242987017/58dc716da7", rimowa:"https://vimeo.com/1069655598/aaf1d7e228", lexus:"https://vimeo.com/1069690915/3310dba15a", ytmusic:"https://vimeo.com/1069663413/38094f9fd3",
+  lilpump:"https://vimeo.com/1242987866/9e76a7210e", citygirls:"https://vimeo.com/1242988962/e133466de6", homewithyou:"https://vimeo.com/1242988029/114f810c54", fireoflove:"https://vimeo.com/1242988054/ebd1c43f65", haim:"https://vimeo.com/86925240", lykkeli:"https://vimeo.com/1242996064/6c850b890c", bushs:"https://vimeo.com/1069652658/4ca70124d1", jviewz:"https://vimeo.com/86927257", dodge:"https://vimeo.com/1069692438/2468ada9ee", google:"https://vimeo.com/1069658470/cfe6f2721a", jidvans:"https://vimeo.com/1243018271/1656dc33a7", pixel8:"https://vimeo.com/1243027923/d9aeb9ac79", walmart:"https://vimeo.com/1243029811/91a251d360", mbpro:"https://vimeo.com/1243030324/34277d702b", bohan:"https://vimeo.com/1243032901/25fe32a165", stumptown:"https://vimeo.com/1243032754/33b16c44dc", sonos:"https://vimeo.com/1243046277/f5417d8639", shinya:"https://vimeo.com/158765448", turbotax:"https://vimeo.com/1243048593/76c6e88dba", iphone:"https://vimeo.com/1069651811/ce64a11f42", xbox:"https://vimeo.com/1243048377/be8ee44e7f", eames:"https://vimeo.com/1243054409/28a1b13c87", honda:"https://vimeo.com/1243056174/0cc0394641", nasir:"https://vimeo.com/1243060659/8c6ed96939", takeoff:"https://vimeo.com/1243058599/828872f3a5", uber:"https://vimeo.com/1243060267/be799b02c4", airbnb:"https://vimeo.com/1243056675/a717f764df", mo:"https://vimeo.com/1243058878/b9d07412e1", fanta:"https://vimeo.com/1069693718/a36c858a11"
+};
+const name = w => [w.client, w.t].filter(Boolean).join(" — ");
+// Vimeo-hosted stills load straight from Vimeo on scottbutzer.com; anywhere else (the Claude copy, which can't reach Vimeo's image server)
+// they come from thumbs/, which a GitHub workflow keeps in step with these URLs.
+const OWN_SITE = /(^|\.)scottbutzer\.com$|github\.io$|^localhost$|^127\./.test(location.hostname);
+const still = w => /^https?:/.test(w.img||"") ? (OWN_SITE ? w.img : `thumbs/${w.k}.jpg`) : `media/${w.img||w.k}.jpg`;
+// Order and removals live in order.json: {"order":[keys...], "removed":[keys...]}. Keys not listed go at the end.
+async function savedOrder(){
+  try{const ctl=new AbortController(), t=setTimeout(()=>ctl.abort(),1500);
+    const r=await fetch("order.json",{cache:"no-store",signal:ctl.signal}); clearTimeout(t);
+    if(r.ok) return await r.json();}catch(e){}
+  return null;
+}
+{
+  const raw=await savedOrder();
+  const saved=Array.isArray(raw) ? raw : (raw&&Array.isArray(raw.order) ? raw.order : null);
+  window.__removed=(raw&&Array.isArray(raw.removed)) ? raw.removed : [];
+  window.__catOrder=(raw&&raw.catOrder&&typeof raw.catOrder==="object") ? raw.catOrder : {};   // optional per-category order for the filtered views
+  for(let i=work.length-1;i>=0;i--) if(window.__removed.includes(work[i].k)) work.splice(i,1);   // deleted spots never render
+  if(saved){
+    const rank=new Map(saved.map((k,i)=>[k,i]));
+    work.forEach((w,i)=>w.o=i);
+    work.sort((a,b)=>(rank.has(a.k)?rank.get(a.k):1000+a.o)-(rank.has(b.k)?rank.get(b.k):1000+b.o));
+  }
+}
+const VIEW = 896; // seconds of reel visible at once; keeps clip sizes as they were with nine films
+const greys=["var(--c1)","var(--c2)","var(--c3)","var(--c4)","var(--c5)","var(--c6)"];
+const total = work.reduce((s,w)=>s+w.len,0);
+// Timeline clips are drawn at most MAXCLIP seconds wide; timecode still runs on each piece's real length
+const MAXCLIP = 180, vlen = w => Math.min(w.len, MAXCLIP);
+const vtotal = work.reduce((s,w)=>s+vlen(w),0);
+const tc = (sec,f=0)=>{const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=Math.floor(sec%60);return [h,m,s,f].map(n=>String(n).padStart(2,"0")).join(":")};
+const dur = x => {const s=Math.round(x);return s>=60 ? `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}` : `:${s}`};
+const esc = t => String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// Timeline
+let start = 0;
+work.forEach((w,i)=>{
+  w.in = start; start += w.len;
+  const v = document.createElement("button");
+  v.type="button"; v.className="clip"; v.style.setProperty("--d",vlen(w)); v.style.setProperty("--clr",greys[i%6]);
+  v.style.setProperty("--img",`url("${still(w)}")`);
+  v.innerHTML=`<span class="face"><b>${esc(w.client||w.t)}</b><i>${dur(w.len)}</i></span>`; v.dataset.i=i;
+  v.setAttribute("aria-label",`Play ${name(w)}, ${dur(w.len)}`);
+  v.addEventListener("click",()=>openPlayer(i));
+  document.getElementById("v1").append(v);
+  const a = document.createElement("div");
+  a.className="clip"; a.style.setProperty("--d",vlen(w)); a.style.setProperty("--clr",greys[i%6]);
+  document.getElementById("a1").append(a);
+});
+document.getElementById("reel-label").textContent=`Selects_Reel_2026 · ${work.length} films · scroll →`;
+document.getElementById("outpoint").textContent="Out point "+tc(Math.floor(total));
+document.getElementById("tl-body").style.width=(vtotal/VIEW*100)+"%";
+const ruler = document.getElementById("ruler");
+const step = innerWidth<560 ? 240 : 120;
+for(let s=0;s<=total;s+=step){const sp=document.createElement("span");sp.dataset.t=s;sp.style.left=(s/total*100)+"%";sp.textContent=`${Math.floor(s/60)}:00`;ruler.append(sp)}
+
+// Playhead: one pass across the reel on load, then rests at the out point
+const ph=document.getElementById("ph"), tcEl=document.getElementById("tc"), v1=document.getElementById("v1");
+const v1clips=()=>v1.children;
+function timeToX(sec){                     // px from the left edge of V1
+  const cs=v1clips();
+  for(let i=0;i<cs.length;i++){const w=work[i]; if(sec<w.in+w.len || i===cs.length-1){
+    const c=cs[i], f=Math.max(0,Math.min(1,(sec-w.in)/w.len)); return c.offsetLeft + c.offsetWidth*f;}}
+  return 0;
+}
+function xToTime(x){
+  const cs=v1clips();
+  for(let i=0;i<cs.length;i++){const c=cs[i], w=work[i];
+    if(x < c.offsetLeft + c.offsetWidth + 1 || i===cs.length-1){
+      const f=Math.max(0,Math.min(1,(x-c.offsetLeft)/c.offsetWidth)); return w.in + w.len*f;}}
+  return 0;
+}
+function placeRuler(){                     // ticks sit at their true times; ones that would crowd (inside long, capped clips) hide
+  let last=-1e9; ruler.querySelectorAll("span").forEach(sp=>{ const x=timeToX(+sp.dataset.t); sp.style.left=x+"px"; const show=x-last>=44; sp.style.visibility=show?"":"hidden"; if(show) last=x; });
+}
+function place(sec){
+  ph.style.left=(v1.offsetLeft + v1.parentElement.offsetLeft + timeToX(sec))+"px";
+  tcEl.textContent=tc(Math.floor(sec),Math.floor((sec%1)*FPS));
+  document.querySelectorAll("#v1 .clip").forEach(c=>{const w=work[c.dataset.i];c.classList.toggle("hot",sec>=w.in&&sec<w.in+w.len&&sec<total)});
+}
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let pos=Math.min(VIEW,total), introStop=false;
+if(reduce){place(pos)}else{
+  const t0=performance.now(),D=5000;
+  const end=Math.min(VIEW,total);
+  (function anim(now){if(introStop)return;const k=Math.min(1,(now-t0)/D);pos=end*(1-Math.pow(1-k,3));place(pos);if(k<1)requestAnimationFrame(anim)})(t0);
+  const stopIntro=()=>{introStop=true};   // the moment the visitor touches or hovers the timeline, the intro sweep yields to them
+  const tlEl=document.querySelector(".timeline");
+  ["mousemove","mouseenter","touchstart","pointerdown","wheel"].forEach(ev=>tlEl.addEventListener(ev,stopIntro,{passive:true,capture:true}));
+}
+addEventListener("resize",()=>{placeRuler();place(pos)});
+placeRuler();
+// Desktop: the whole timeline panel drives the playhead (top edge to bottom), except the reel's scrollbar
+const tlBox=document.querySelector(".timeline"), tlScroll=document.getElementById("tl-scroll");
+const onScrollbar=e=>{ const r=tlScroll.getBoundingClientRect(), bar=tlScroll.offsetHeight-tlScroll.clientHeight; return bar>0 && e.clientY>=r.bottom-bar-2 && e.clientY<=r.bottom+2; };
+const hoverScrub=matchMedia("(hover: hover)").matches;
+if(hoverScrub) tlBox.addEventListener("mousemove",e=>{ if(onScrollbar(e)) return; const r=v1.getBoundingClientRect(); pos=Math.max(0,Math.min(total,xToTime(e.clientX-r.left))); place(pos); });
+
+// Phones/tablets: a work card colours and zooms under a finger, like the desktop hover.
+// The card is found from the finger's screen position (not the event target), and re-checked as the finger moves and as
+// the page scrolls under it - so the tap that stops a swipe lights the card it lands on, even when iOS reports the
+// touch or its scroll position late. Only one card is ever lit; after the finger lifts it holds its colour ~1s, then fades.
+(function(){
+  const g=document.getElementById("grid"); let lit=null, fx=null, fy=null;
+  const cardAt=(x,y)=>{ const el=document.elementFromPoint(x,y); return el&&el.closest("#grid .card"); };
+  const set=c=>{ if(lit&&lit!==c){ clearTimeout(lit._t); lit.classList.remove("touch"); } lit=c||null; if(lit){ clearTimeout(lit._t); lit.classList.add("touch"); } };
+  const track=(x,y)=>{ fx=x; fy=y; set(cardAt(x,y)); };
+  document.addEventListener("touchstart",e=>{ const t=e.touches[0]; if(t) track(t.clientX,t.clientY); },{passive:true,capture:true});
+  document.addEventListener("touchmove",e=>{ const t=e.touches[0]; if(t) track(t.clientX,t.clientY); },{passive:true,capture:true});
+  document.addEventListener("pointerdown",e=>{ if(e.pointerType!=="mouse") track(e.clientX,e.clientY); },{passive:true,capture:true});
+  addEventListener("scroll",()=>{ if(fx!==null) set(cardAt(fx,fy)); },{passive:true});
+  const up=()=>{ fx=fy=null; const c=lit; if(c){ clearTimeout(c._t); c._t=setTimeout(()=>{ c.classList.remove("touch"); if(lit===c) lit=null; },1000); } };
+  document.addEventListener("touchend",e=>{ if(!e.touches.length) up(); },{passive:true,capture:true});
+  document.addEventListener("touchcancel",up,{passive:true,capture:true});
+  const clear=()=>{ fx=fy=null; set(null); };
+  addEventListener("pageshow",clear); document.addEventListener("visibilitychange",clear);
+})();
+
+// Background reel (test): cycles short muted moments from the spots behind the headline.
+// Each moment is a Vimeo background player started at a chosen second; the next one loads underneath and fades in once it is actually playing.
+(function(){
+  const box=document.getElementById("hero-bg"), now=document.getElementById("hero-now");
+  if(!box || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const MOMENTS=[["apple",22],["mercedes",48],["vincestaples",34],["rimowa",18],["gatorade",70],["ytmusic",52],["porsche",30],["nasir",95]];
+  const HOLD=6500;
+  const list=MOMENTS.map(([k,t])=>{ const w=work.find(x=>x.k===k), url=w&&VIMEO[k]; const m=url&&String(url).match(/vimeo\.com\/(\d+)(?:\/([0-9a-f]+))?/); return m?{w,t,id:m[1],h:m[2]}:null; }).filter(Boolean);
+  if(!list.length) return;
+  const fit=()=>box.style.setProperty("--h",box.offsetHeight+"px"); fit(); addEventListener("resize",fit);
+  let idx=0, shown=null;
+  function load(n){
+    const it=list[n%list.length], layer=document.createElement("div"); layer.className="bg-layer";
+    const f=document.createElement("iframe"); f.allow="autoplay"; f.tabIndex=-1; f.title="";
+    f.src=`https://player.vimeo.com/video/${it.id}?${it.h?"h="+it.h+"&":""}background=1&muted=1&autoplay=1&loop=1&dnt=1&quality=540p#t=${it.t}s`;
+    layer.append(f); box.append(layer);
+    let started=false;
+    const onMsg=e=>{ if(e.source!==f.contentWindow) return; let d=e.data; try{ if(typeof d==="string") d=JSON.parse(d) }catch(_){ return }
+      if(d.event==="ready") f.contentWindow.postMessage(JSON.stringify({method:"addEventListener",value:"playProgress"}),"https://player.vimeo.com");
+      if(d.event==="playProgress" && !started){ started=true; reveal(); } };
+    addEventListener("message",onMsg);
+    const fallback=setTimeout(()=>{ if(!started){ started=true; reveal(); } },4000);
+    function reveal(){ clearTimeout(fallback); requestAnimationFrame(()=>layer.classList.add("on")); now.textContent="Now showing · "+name(it.w);
+      const old=shown; shown=layer; if(old){ setTimeout(()=>{ old.remove(); },1400); }
+      setTimeout(()=>{ removeEventListener("message",onMsg); },500);
+      setTimeout(()=>{ idx++; load(idx); },HOLD); }
+  }
+  // pause the reel while the film player is open or the tab is hidden, to save data
+  load(0);
+})();
+let dock=null;   // set below; the touch scrubber drives it on phones and tablets
+// Dock-style magnification: clips near the cursor get taller AND wider, pushing their neighbours aside.
+// The reel tightens elsewhere to make room, so nothing overlaps; A1, the ruler and the playhead follow the cuts.
+(function(){
+  if(reduce) return;
+  const clips=[...v1.children], audio=[...document.getElementById("a1").children];
+  const MAX=1.42, GROW=70, R=140;   // peak height scale, max extra width in px, falloff radius in px
+  const cur=clips.map(()=>0), tgt=clips.map(()=>0);
+  let rest=[], mx=null, cx=null, running=false;
+  function measureRest(){            // clip centres with no magnification, so the cursor's target doesn't chase moving clips
+    clips.forEach(c=>c.style.setProperty("--x",0)); audio.forEach(c=>c.style.setProperty("--x",0));
+    rest=clips.map(c=>[c.offsetLeft, c.offsetLeft+c.offsetWidth]);
+    clips.forEach((c,i)=>c.style.setProperty("--x",(cur[i]*GROW).toFixed(2)));
+    audio.forEach((c,i)=>c.style.setProperty("--x",(cur[i]*GROW).toFixed(2)));
+  }
+  function frame(){
+    let moving=false;
+    clips.forEach((c,i)=>{
+      if(mx===null) tgt[i]=0; else {
+        const [l,r]=rest[i], d = mx<l ? l-mx : mx>r ? mx-r : 0;
+        tgt[i]=Math.exp(-(d*d)/(2*(R/2)*(R/2)));
+      }
+      cur[i]+=(tgt[i]-cur[i])*0.18;
+      if(Math.abs(tgt[i]-cur[i])>0.002) moving=true; else cur[i]=tgt[i];
+      const k=cur[i], x=(k*GROW).toFixed(2);
+      c.style.setProperty("--x",x); audio[i].style.setProperty("--x",x);
+      c.style.setProperty("--s",(1+(MAX-1)*k).toFixed(4));
+      c.style.setProperty("--k",k.toFixed(4));
+    });
+    clips.forEach(c=>{const b=c.getBoundingClientRect(); c.classList.toggle("lit", cx!==null && cx>=b.left && cx<b.right);});
+    placeRuler(); place(pos);
+    if(moving) requestAnimationFrame(frame); else running=false;
+  }
+  function kick(){ if(!running){running=true;requestAnimationFrame(frame)} }
+  const at=x=>{ cx=x; mx=x - v1.getBoundingClientRect().left; kick(); };
+  dock={ start:measureRest, move:at, end:()=>{ mx=null; cx=null; kick(); } };
+  if(matchMedia("(hover: hover)").matches){
+    tlBox.addEventListener("mouseenter",()=>{ measureRest(); });
+    tlBox.addEventListener("mousemove",e=>{ if(onScrollbar(e)) dock.end(); else at(e.clientX); });
+    tlBox.addEventListener("mouseleave",dock.end);
+  }
+  addEventListener("resize",()=>{ if(rest.length) measureRest(); });
+})();
+
+// Edge scrolling: push the playhead into either end of the visible timeline and the reel scrolls that way,
+// faster the closer you get to the edge. The playhead and magnification keep tracking the pointer while it moves.
+(function(){
+  if(!matchMedia("(hover: hover)").matches) return;
+  const sc=document.getElementById("tl-scroll"), LABEL=34, EDGE=90, MAXV=16;   // label width, edge zone px, peak px per frame
+  let px=null, py=null, vel=0, running=false;
+  function speed(){
+    if(px===null) return 0;
+    const r=sc.getBoundingClientRect(), left=r.left+LABEL, right=r.right;
+    if(px<left+EDGE) return -MAXV*Math.min(1,(left+EDGE-px)/EDGE)**1.5;
+    if(px>right-EDGE) return  MAXV*Math.min(1,(px-(right-EDGE))/EDGE)**1.5;
+    return 0;
+  }
+  function tick(){
+    vel=speed();
+    const max=sc.scrollWidth-sc.clientWidth, before=sc.scrollLeft;
+    if(vel && ((vel<0 && before>0) || (vel>0 && before<max))){
+      sc.scrollLeft=Math.max(0,Math.min(max,before+vel));
+      tlBox.dispatchEvent(new MouseEvent("mousemove",{clientX:px,clientY:py,bubbles:true}));   // re-scrub at the new scroll position
+      requestAnimationFrame(tick);
+    } else running=false;
+  }
+  tlBox.addEventListener("mousemove",e=>{ if(!e.isTrusted) return; if(onScrollbar(e)){ px=null; return; } px=e.clientX; py=e.clientY; if(!running && speed()){running=true;requestAnimationFrame(tick)} });
+  tlBox.addEventListener("mouseleave",()=>{ px=null; });
+})();
+
+// Touch (phones and tablets): the clips scroll the reel natively and a tap opens one. Touching anywhere else in the timeline
+// panel (from its top edge, over the ruler, down past the audio strip) jumps the playhead to the finger's position; sliding keeps it under the finger, the clips magnify beneath it,
+// and near either edge the reel scrolls along.
+(function(){
+  if(matchMedia("(hover: hover)").matches) return;
+  const sc=document.getElementById("tl-scroll"), body=document.querySelector(".timeline"), LABEL=34, EDGE=60, MAXV=12;   // the whole timeline panel, top to bottom
+  let mode=null, sy=0, sx=0, px=0, running=false;
+  function lit(x){ [...v1.children].forEach(c=>{const b=c.getBoundingClientRect(); c.classList.toggle("lit", x!==null && x>=b.left && x<b.right);}); }
+  function scrubTo(x){ const r=v1.getBoundingClientRect(); pos=Math.max(0,Math.min(total,xToTime(x-r.left))); place(pos);
+    if(dock) dock.move(x); else lit(x); }
+  function speed(){ const r=sc.getBoundingClientRect(), l=r.left+LABEL;
+    if(px<l+EDGE) return -MAXV*Math.min(1,(l+EDGE-px)/EDGE); if(px>r.right-EDGE) return MAXV*Math.min(1,(px-(r.right-EDGE))/EDGE); return 0; }
+  function tick(){ if(mode!=="scrub"){ running=false; return; } const v=speed(), max=sc.scrollWidth-sc.clientWidth;
+    if(v && ((v<0&&sc.scrollLeft>0)||(v>0&&sc.scrollLeft<max))){ sc.scrollLeft=Math.max(0,Math.min(max,sc.scrollLeft+v)); scrubTo(px); }
+    requestAnimationFrame(tick); }
+  body.addEventListener("touchstart",e=>{
+    if(e.touches.length!==1 || e.target.closest("#v1") || e.target.closest(".track-id")) { mode=null; return; }   // clips and labels: leave to the browser
+    const t=e.touches[0]; sx=px=t.clientX; sy=t.clientY; mode="scrub";
+    if(dock) dock.start(); scrubTo(px);                                   // the playhead jumps to the finger right away
+    if(!running){ running=true; requestAnimationFrame(tick); }
+  },{passive:true});
+  body.addEventListener("touchmove",e=>{
+    if(mode!=="scrub") return; const t=e.touches[0];
+    if(Math.abs(t.clientY-sy)>40 && Math.abs(t.clientY-sy)>Math.abs(t.clientX-sx)*2){ end(); return; }   // clearly a vertical swipe: let the page scroll
+    e.preventDefault(); px=t.clientX; scrubTo(px);
+  },{passive:false});
+  function end(){ if(mode==="scrub"){ if(dock) dock.end(); else setTimeout(()=>lit(null),600); } mode=null; }
+  body.addEventListener("touchend",end); body.addEventListener("touchcancel",end);
+})();
+
+// Clients: built from the work on the site, in site order. Documentaries credit the brand behind them.
+{
+  const CLIENT_OF={haim:"Red Bull", jviewz:"Motorola", jidvans:"Vans", bohan:"Vans", shinya:null};
+  const seen=new Set(), box=document.getElementById("clients");
+  work.forEach(w=>{ const c = (w.k in CLIENT_OF) ? CLIENT_OF[w.k] : w.client; if(!c||seen.has(c)) return; seen.add(c);
+    const sp=document.createElement("span"); sp.textContent=c; box.append(sp); });
+}
+
+// Work grid
+// Fixed categories: the filter row always shows these, even before a category has any work in it
+const CATS=[["All","All"],["Commercial","Commercials"],["Music Video","Music Videos"],["Film","Films"]];
+const grid=document.getElementById("grid"), filters=document.getElementById("filters");
+work.forEach((w,i)=>{
+  const c=document.createElement("button");
+  c.type="button"; c.className="card"; c.id="p"+i; c.dataset.cat=w.cat; c.dataset.k=w.k;
+  c.innerHTML=`<div class="still"><img class="frame" src="${still(w)}" alt="" loading="lazy">
+      <span class="ar">${w.fps} fps</span>
+      <span class="burn">TC ${tc(Math.floor(w.in))} → ${tc(Math.floor(w.in+w.len))}</span>
+      <div class="play"><span>▶ PLAY ${dur(w.len)}</span></div></div>
+    <div class="card-top"><h3>${esc(name(w))}</h3><span class="mono" style="color:var(--muted)">${dur(w.len)}</span></div>
+    <dl class="meta"><dt>Category</dt><dd>${esc(w.cat)}</dd></dl>`;
+  c.addEventListener("click",()=>openPlayer(i));
+  grid.append(c);
+});
+const empty=document.createElement("p"); empty.className="grid-empty"; empty.hidden=true; grid.after(empty);
+CATS.forEach(([cat,label])=>{
+  const b=document.createElement("button"); b.type="button"; b.textContent=label; b.setAttribute("aria-pressed",cat==="All");
+  b.onclick=()=>{filters.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+    const co=(window.__catOrder||{})[cat]||[];
+    let shown=0; grid.querySelectorAll(".card").forEach(c=>{const on=cat==="All"||c.dataset.cat===cat; c.hidden=!on; shown+=on;
+      const r=co.indexOf(c.dataset.k); c.style.order = (cat!=="All" && r>=0) ? r : (cat!=="All" && co.length ? co.length : "");});
+    empty.hidden=shown>0; empty.textContent=`${label} coming soon.`;};
+  filters.append(b);
+});
+
+// Player
+const player=document.getElementById("player"), ifr=document.getElementById("pl-iframe"), soon=document.getElementById("pl-soon");
+const endCard=document.getElementById("pl-end");
+// When a Vimeo video finishes, show our own end card instead of Vimeo's "More from…" screen
+addEventListener("message",e=>{
+  if(e.origin!=="https://player.vimeo.com" || e.source!==ifr.contentWindow) return;
+  let d=e.data; try{ if(typeof d==="string") d=JSON.parse(d); }catch(_){ return; }
+  const send=o=>ifr.contentWindow.postMessage(JSON.stringify(o),"https://player.vimeo.com");
+  if(d.event==="ready") ["finish","ended","play","playProgress","timeupdate","pause"].forEach(v=>send({method:"addEventListener",value:v}));
+  // Captions off by default - the phone's own full-screen player otherwise switches on Vimeo's auto-generated captions
+  if(d.event==="ready"||d.event==="play") send({method:"disableTextTrack"});
+  if(d.event==="finish"||d.event==="ended") showEnd();
+  // Phones open films in the phone's own full-screen player; now and then it opens on a frozen frame without starting.
+  // Watchdog: if play was pressed but the picture hasn't advanced shortly after, nudge it to play (twice at most).
+  if(d.event==="play"){ clearTimeout(stall.t); stall.moved=false; stall.tries=0; const check=()=>{ if(stall.moved||stall.paused||stall.tries>=2||player.hidden) return; stall.tries++; send({method:"play"}); stall.t=setTimeout(check,2500); }; stall.paused=false; stall.t=setTimeout(check,2500); }
+  if(d.event==="playProgress"||d.event==="timeupdate"){ const sec=d.data&&d.data.seconds; if(sec>0.3) stall.moved=true; }
+  if(d.event==="pause" && stall.moved){ stall.paused=true; clearTimeout(stall.t); }   // a pause before any picture moved is the stall itself, not the viewer
+});
+const stall={t:0,moved:false,paused:false,tries:0};
+function showEnd(){
+  const w=work[cur], nx=work[(cur+1)%work.length];
+  document.getElementById("pl-end-bg").style.backgroundImage=`url("${still(w)}")`;
+  document.getElementById("pl-upnext-name").textContent=name(nx);
+  ifr.src="about:blank"; ifr.hidden=true; endCard.hidden=false;
+  document.getElementById("pl-upnext").focus();
+}
+document.getElementById("pl-replay").onclick=()=>openPlayer(cur);
+document.getElementById("pl-upnext").onclick=()=>openPlayer(cur+1);
+function vimeoSrc(url){                       // vimeo.com/123 or vimeo.com/123/abcdef (unlisted) -> player URL
+  const m=String(url||"").match(/vimeo\.com\/(?:video\/)?(\d+)(?:\/([0-9a-f]+))?(?:.*[?&]h=([0-9a-f]+))?/i); if(!m) return "";
+  // Phones and tablets block autoplay with sound inside embedded players, so there the viewer taps Vimeo's play button once and hears it
+  const touch=matchMedia("(hover: none) and (pointer: coarse)").matches || /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+  // Phones: playsinline=0 makes the film jump to the phone's own full-screen player the moment play is tapped, where turning the phone sideways fills the screen
+  const phone=touch && Math.min(screen.width,screen.height)<600;
+  const h=m[2]||m[3]; return `https://player.vimeo.com/video/${m[1]}?${h?"h="+h+"&":""}${touch?"":"autoplay=1&"}title=0&byline=0&portrait=0&badge=0&vimeo_logo=0&dnt=1&texttrack=false&playsinline=${phone?0:1}`;
+}
+let cur=0, opener=null;
+function openPlayer(i){
+  cur=(i+work.length)%work.length; const w=work[cur];
+  if(player.hidden) opener=document.activeElement;
+  const src=vimeoSrc(VIMEO[w.k]);
+  endCard.hidden=true; ifr.hidden=!src; soon.hidden=!!src; ifr.src=src||"about:blank";
+  document.getElementById("pl-title").textContent=name(w);
+  document.getElementById("pl-meta").textContent=`Editor${w.note?" · "+w.note:""} · ${dur(w.len)} · ${w.fps} fps`;
+  player.hidden=false; document.body.style.overflow="hidden";
+  document.getElementById("pl-close").focus();
+}
+function closePlayer(){ifr.src="about:blank";endCard.hidden=true;player.hidden=true;document.body.style.overflow="";opener&&opener.focus()}
+document.getElementById("pl-close").onclick=closePlayer;
+document.getElementById("pl-next").onclick=()=>openPlayer(cur+1);
+document.getElementById("pl-prev").onclick=()=>openPlayer(cur-1);
+player.addEventListener("click",e=>{if(e.target===player)closePlayer()});
+addEventListener("keydown",e=>{if(player.hidden)return;if(e.key==="Escape")closePlayer();if(e.key==="ArrowRight")openPlayer(cur+1);if(e.key==="ArrowLeft")openPlayer(cur-1)});
+
+// Copy email
+document.getElementById("copy").addEventListener("click",()=>{
+  const t=document.getElementById("mail").textContent, s=document.getElementById("copied");
+  navigator.clipboard.writeText(t).then(()=>s.textContent="Copied").catch(()=>{
+    const r=document.createRange();r.selectNodeContents(document.getElementById("mail"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);s.textContent="Selected — press Ctrl/⌘+C"});
+});
+})();
+</script>
+</body>
+</html>
