@@ -168,13 +168,13 @@ footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;paddin
 @media (max-width:560px){nav{gap:16px}.clip b{font-size:10px}.clip i{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
-/* ===== Background reel (test): short muted moments from the spots play behind the headline, in black and white ===== */
+/* ===== Background reel (test): short muted moments from the spots play behind the headline, in full colour ===== */
 .hero-top{position:relative;display:grid;gap:28px;padding-block:56px 64px;isolation:isolate}
 .hero-bg{position:absolute;inset:0;left:50%;width:100vw;transform:translateX(-50%);z-index:-1;overflow:hidden;background:#0b0b0b}
 .hero-bg .bg-layer{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
 .hero-bg .bg-layer.on{opacity:1}
 .hero-bg iframe{position:absolute;top:50%;left:50%;border:0;pointer-events:none;
-  width:max(100%, calc(var(--h,100%) * 16 / 9));height:max(100%, calc(100vw * 9 / 16));transform:translate(-50%,-50%) scale(1.34);filter:grayscale(1) contrast(1.05)}   /* zoom crops any letterbox or pillarbox bars */
+  width:max(100%, calc(var(--h,100%) * 16 / 9));height:max(100%, calc(100vw * 9 / 16));transform:translate(-50%,-50%) scale(1.34)}   /* zoom crops any letterbox or pillarbox bars */
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.72),rgba(0,0,0,.35) 70%,rgba(0,0,0,.2)),linear-gradient(0deg,rgba(0,0,0,.35),transparent 40%)}
 .hero-top h1{color:#fff}
 .hero-top h1 em,.hero-top .lede{color:rgba(255,255,255,.82)}
